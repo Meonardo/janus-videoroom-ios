@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,6 +13,18 @@
 		A053DBED262EF24500672386 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A053DBEB262EF24500672386 /* Main.storyboard */; };
 		A053DBEF262EF24700672386 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A053DBEE262EF24700672386 /* Assets.xcassets */; };
 		A053DBF2262EF24700672386 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A053DBF0262EF24700672386 /* LaunchScreen.storyboard */; };
+		A053DBFC262EF49B00672386 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = A053DBFB262EF49B00672386 /* Starscream */; };
+		A053DC00262EF4F400672386 /* Alertift in Frameworks */ = {isa = PBXBuildFile; productRef = A053DBFF262EF4F400672386 /* Alertift */; };
+		A053DC04262EF59E00672386 /* WebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = A053DC03262EF59E00672386 /* WebRTC */; };
+		A053DC08262EF68A00672386 /* WebRTCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC07262EF68A00672386 /* WebRTCClient.swift */; };
+		A053DC0C262EF6D500672386 /* WebSocketSignalingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC0B262EF6D500672386 /* WebSocketSignalingClient.swift */; };
+		A053DC0F262EF6F000672386 /* JanusRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC0E262EF6F000672386 /* JanusRequests.swift */; };
+		A053DC12262EF70500672386 /* JanusConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC11262EF70500672386 /* JanusConnection.swift */; };
+		A053DC15262EF92000672386 /* JanusRoomManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC14262EF92000672386 /* JanusRoomManager.swift */; };
+		A053DC19262EF95B00672386 /* Codextended.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC18262EF95B00672386 /* Codextended.swift */; };
+		A053DC1E262EFA4100672386 /* IceCandidate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC1B262EFA4100672386 /* IceCandidate.swift */; };
+		A053DC1F262EFA4100672386 /* SessionDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC1C262EFA4100672386 /* SessionDescription.swift */; };
+		A053DC20262EFA4100672386 /* RTCStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC1D262EFA4100672386 /* RTCStates.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +36,15 @@
 		A053DBEE262EF24700672386 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A053DBF1262EF24700672386 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A053DBF3262EF24700672386 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A053DC07262EF68A00672386 /* WebRTCClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebRTCClient.swift; sourceTree = "<group>"; };
+		A053DC0B262EF6D500672386 /* WebSocketSignalingClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketSignalingClient.swift; sourceTree = "<group>"; };
+		A053DC0E262EF6F000672386 /* JanusRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JanusRequests.swift; sourceTree = "<group>"; };
+		A053DC11262EF70500672386 /* JanusConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JanusConnection.swift; sourceTree = "<group>"; };
+		A053DC14262EF92000672386 /* JanusRoomManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JanusRoomManager.swift; sourceTree = "<group>"; };
+		A053DC18262EF95B00672386 /* Codextended.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Codextended.swift; sourceTree = "<group>"; };
+		A053DC1B262EFA4100672386 /* IceCandidate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IceCandidate.swift; sourceTree = "<group>"; };
+		A053DC1C262EFA4100672386 /* SessionDescription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionDescription.swift; sourceTree = "<group>"; };
+		A053DC1D262EFA4100672386 /* RTCStates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RTCStates.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +52,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A053DBFC262EF49B00672386 /* Starscream in Frameworks */,
+				A053DC04262EF59E00672386 /* WebRTC in Frameworks */,
+				A053DC00262EF4F400672386 /* Alertift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,6 +80,7 @@
 		A053DBE4262EF24500672386 /* janus-videoroom-example */ = {
 			isa = PBXGroup;
 			children = (
+				A053DC06262EF61900672386 /* Source */,
 				A053DBE5262EF24500672386 /* AppDelegate.swift */,
 				A053DBE7262EF24500672386 /* SceneDelegate.swift */,
 				A053DBE9262EF24500672386 /* ViewController.swift */,
@@ -65,6 +90,30 @@
 				A053DBF3262EF24700672386 /* Info.plist */,
 			);
 			path = "janus-videoroom-example";
+			sourceTree = "<group>";
+		};
+		A053DC06262EF61900672386 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				A053DC17262EF93D00672386 /* Venders */,
+				A053DC07262EF68A00672386 /* WebRTCClient.swift */,
+				A053DC0B262EF6D500672386 /* WebSocketSignalingClient.swift */,
+				A053DC0E262EF6F000672386 /* JanusRequests.swift */,
+				A053DC11262EF70500672386 /* JanusConnection.swift */,
+				A053DC14262EF92000672386 /* JanusRoomManager.swift */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		A053DC17262EF93D00672386 /* Venders */ = {
+			isa = PBXGroup;
+			children = (
+				A053DC18262EF95B00672386 /* Codextended.swift */,
+				A053DC1B262EFA4100672386 /* IceCandidate.swift */,
+				A053DC1D262EFA4100672386 /* RTCStates.swift */,
+				A053DC1C262EFA4100672386 /* SessionDescription.swift */,
+			);
+			path = Venders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +132,11 @@
 			dependencies = (
 			);
 			name = "janus-videoroom-example";
+			packageProductDependencies = (
+				A053DBFB262EF49B00672386 /* Starscream */,
+				A053DBFF262EF4F400672386 /* Alertift */,
+				A053DC03262EF59E00672386 /* WebRTC */,
+			);
 			productName = "janus-videoroom-example";
 			productReference = A053DBE2262EF24500672386 /* janus-videoroom-example.app */;
 			productType = "com.apple.product-type.application";
@@ -110,6 +164,11 @@
 				Base,
 			);
 			mainGroup = A053DBD9262EF24500672386;
+			packageReferences = (
+				A053DBFA262EF49B00672386 /* XCRemoteSwiftPackageReference "Starscream" */,
+				A053DBFE262EF4F400672386 /* XCRemoteSwiftPackageReference "Alertift" */,
+				A053DC02262EF59E00672386 /* XCRemoteSwiftPackageReference "WebRTC" */,
+			);
 			productRefGroup = A053DBE3262EF24500672386 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -137,9 +196,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A053DC12262EF70500672386 /* JanusConnection.swift in Sources */,
 				A053DBEA262EF24500672386 /* ViewController.swift in Sources */,
+				A053DC1F262EFA4100672386 /* SessionDescription.swift in Sources */,
+				A053DC20262EFA4100672386 /* RTCStates.swift in Sources */,
+				A053DC15262EF92000672386 /* JanusRoomManager.swift in Sources */,
 				A053DBE6262EF24500672386 /* AppDelegate.swift in Sources */,
+				A053DC19262EF95B00672386 /* Codextended.swift in Sources */,
 				A053DBE8262EF24500672386 /* SceneDelegate.swift in Sources */,
+				A053DC0F262EF6F000672386 /* JanusRequests.swift in Sources */,
+				A053DC0C262EF6D500672386 /* WebSocketSignalingClient.swift in Sources */,
+				A053DC08262EF68A00672386 /* WebRTCClient.swift in Sources */,
+				A053DC1E262EFA4100672386 /* IceCandidate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,6 +357,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = V7WNVHSHQS;
 				INFOPLIST_FILE = "janus-videoroom-example/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -308,6 +377,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = V7WNVHSHQS;
 				INFOPLIST_FILE = "janus-videoroom-example/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -341,6 +411,51 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A053DBFA262EF49B00672386 /* XCRemoteSwiftPackageReference "Starscream" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/daltoniam/Starscream.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.4;
+			};
+		};
+		A053DBFE262EF4F400672386 /* XCRemoteSwiftPackageReference "Alertift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sgr-ksmt/Alertift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.2.0;
+			};
+		};
+		A053DC02262EF59E00672386 /* XCRemoteSwiftPackageReference "WebRTC" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stasel/WebRTC.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 90.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A053DBFB262EF49B00672386 /* Starscream */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A053DBFA262EF49B00672386 /* XCRemoteSwiftPackageReference "Starscream" */;
+			productName = Starscream;
+		};
+		A053DBFF262EF4F400672386 /* Alertift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A053DBFE262EF4F400672386 /* XCRemoteSwiftPackageReference "Alertift" */;
+			productName = Alertift;
+		};
+		A053DC03262EF59E00672386 /* WebRTC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A053DC02262EF59E00672386 /* XCRemoteSwiftPackageReference "WebRTC" */;
+			productName = WebRTC;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A053DBDA262EF24500672386 /* Project object */;
 }

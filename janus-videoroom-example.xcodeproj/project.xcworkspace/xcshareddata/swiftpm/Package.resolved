@@ -1,0 +1,34 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Alertift",
+        "repositoryURL": "https://github.com/sgr-ksmt/Alertift.git",
+        "state": {
+          "branch": null,
+          "revision": "7b819f97cc6f56247a16f0c92413aaf332810d4a",
+          "version": "4.2.0"
+        }
+      },
+      {
+        "package": "Starscream",
+        "repositoryURL": "https://github.com/daltoniam/Starscream.git",
+        "state": {
+          "branch": null,
+          "revision": "df8d82047f6654d8e4b655d1b1525c64e1059d21",
+          "version": "4.0.4"
+        }
+      },
+      {
+        "package": "WebRTC",
+        "repositoryURL": "https://github.com/stasel/WebRTC.git",
+        "state": {
+          "branch": null,
+          "revision": "f73c6add3f7694e2e5f27bc6efb889759bb4e9a9",
+          "version": "90.0.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
