@@ -58,6 +58,16 @@ class VideoRoomViewController: UIViewController {
         super.viewDidLoad()
         prepare()
     }
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		UIApplication.shared.isIdleTimerDisabled = false
+	}
+	
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		UIApplication.shared.isIdleTimerDisabled = true
+	}
 }
 
 /// Configurations
@@ -96,42 +106,71 @@ extension VideoRoomViewController {
     
     private func addObservers() {        
         NotificationCenter.default.addObserver(self, selector: #selector(roomStateDidChange(_:)), name: JanusRoomManager.roomStateChangeNote, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(publisherDidLeave(_:)), name: WebSocketSignalingClient.didReciveLeaveNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(publisherDidJoin(_:)), name: WebSocketSignalingClient.didStartSubscribingNewPublisherNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(publisherDidLeave(_:)), name: JanusRoomManager.publisherDidLeaveRoomNote, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(publisherDidJoin(_:)), name: JanusRoomManager.publisherDidJoinRoomNote, object: nil)
     }
 }
 
 /// Actions
 extension VideoRoomViewController {
     
-    @IBAction private func backDidTap(_ sender: Any) {
-        ProgressHUD.show()
-        roomManager.destroyCurrentRoom()
+    @IBAction private func backAction(_ sender: Any) {
+		Alertift.alert(title: "Leave the Room?", message: "The room will be destroyed").action(.default("Leave")) {
+			ProgressHUD.show()
+			self.roomManager.destroyCurrentRoom()
+		}.action(.cancel("Not now")).show(on: self)
     }
     
-    @IBAction private func switchCamera(_ sender: Any) {
+    @IBAction private func switchCamera(_ sender: UIButton) {
+		let image = sender.currentImage?.withTintColor(.white).withRenderingMode(.alwaysOriginal)
+		ProgressHUD.showSuccess("Camera Switched", image: image)
         localRTCClient?.switchCamera()
     }
     
     @IBAction private func micphoneAction(_ sender: UIButton) {
         sender.isSelected.toggle()
-        
+		let image = sender.image(for: sender.isSelected ? .selected : .normal)?
+			.withTintColor(.white)
+			.withRenderingMode(.alwaysOriginal)
+		
         if sender.isSelected {
+			ProgressHUD.showSuccess("Mute", image: image)
             localRTCClient?.muteAudio()
         } else {
+			ProgressHUD.showSuccess("Unmute", image: image)
             localRTCClient?.unmuteAudio()
         }
     }
     
     @IBAction private func speakerAction(_ sender: UIButton) {
         sender.isSelected.toggle()
-        
+		let image = sender.image(for: sender.isSelected ? .selected : .normal)?
+			.withTintColor(.white)
+			.withRenderingMode(.alwaysOriginal)
+		
         if sender.isSelected {
+			ProgressHUD.showSuccess("Speaker Off", image: image)
             localRTCClient?.speakerOff()
         } else {
+			ProgressHUD.showSuccess("Speaker On", image: image)
             localRTCClient?.speakerOn()
         }
     }
+	
+	@IBAction private func videoAction(_ sender: UIButton) {
+		sender.isSelected.toggle()
+		let image = sender.image(for: sender.isSelected ? .selected : .normal)?
+			.withTintColor(.white)
+			.withRenderingMode(.alwaysOriginal)
+		
+		if sender.isSelected {
+			ProgressHUD.showSuccess("Video Off", image: image)
+			localRTCClient?.hideVideo()
+		} else {
+			ProgressHUD.showSuccess("Video On", image: image)
+			localRTCClient?.showVideo()
+		}
+	}
     
     @objc private func roomStateDidChange(_ sender: Notification) {
         guard let isDestroy = sender.object as? Bool else { return }
@@ -143,11 +182,10 @@ extension VideoRoomViewController {
     }
     
     @objc private func publisherDidLeave(_ sender: Notification) {
-        guard let obj = sender.object as? [String: Any] else { return }
-        guard let handleID = obj["handleID"] as? Int64, let connection = roomManager.connection(for: handleID) else { return }
+        guard let connection = sender.object as? JanusConnection else { return }
+		let handleID = connection.handleID
         
-        let reason = obj["reason"] as? String
-        Alertift.alert(title: "\(connection.publisher.display) has left", message: reason).action(.cancel("dismiss")).show(on: self)
+        Alertift.alert(title: "\(connection.publisher.display) has left", message: nil).action(.cancel("dismiss")).show(on: self)
         
         guard let currentConnection = currentConnection, let renderer = renderer else { return }
         /// 先不考虑自己在视频页面离开 room

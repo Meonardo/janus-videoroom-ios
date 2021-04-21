@@ -17,7 +17,7 @@
 		A053DC00262EF4F400672386 /* Alertift in Frameworks */ = {isa = PBXBuildFile; productRef = A053DBFF262EF4F400672386 /* Alertift */; };
 		A053DC04262EF59E00672386 /* WebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = A053DC03262EF59E00672386 /* WebRTC */; };
 		A053DC08262EF68A00672386 /* WebRTCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC07262EF68A00672386 /* WebRTCClient.swift */; };
-		A053DC0C262EF6D500672386 /* WebSocketSignalingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC0B262EF6D500672386 /* WebSocketSignalingClient.swift */; };
+		A053DC0C262EF6D500672386 /* SignalingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC0B262EF6D500672386 /* SignalingClient.swift */; };
 		A053DC0F262EF6F000672386 /* JanusRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC0E262EF6F000672386 /* JanusRequests.swift */; };
 		A053DC12262EF70500672386 /* JanusConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC11262EF70500672386 /* JanusConnection.swift */; };
 		A053DC15262EF92000672386 /* JanusRoomManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC14262EF92000672386 /* JanusRoomManager.swift */; };
@@ -41,7 +41,7 @@
 		A053DBF1262EF24700672386 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A053DBF3262EF24700672386 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A053DC07262EF68A00672386 /* WebRTCClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebRTCClient.swift; sourceTree = "<group>"; };
-		A053DC0B262EF6D500672386 /* WebSocketSignalingClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketSignalingClient.swift; sourceTree = "<group>"; };
+		A053DC0B262EF6D500672386 /* SignalingClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalingClient.swift; sourceTree = "<group>"; };
 		A053DC0E262EF6F000672386 /* JanusRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JanusRequests.swift; sourceTree = "<group>"; };
 		A053DC11262EF70500672386 /* JanusConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JanusConnection.swift; sourceTree = "<group>"; };
 		A053DC14262EF92000672386 /* JanusRoomManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JanusRoomManager.swift; sourceTree = "<group>"; };
@@ -105,7 +105,7 @@
 			children = (
 				A053DC17262EF93D00672386 /* Venders */,
 				A053DC07262EF68A00672386 /* WebRTCClient.swift */,
-				A053DC0B262EF6D500672386 /* WebSocketSignalingClient.swift */,
+				A053DC0B262EF6D500672386 /* SignalingClient.swift */,
 				A053DC0E262EF6F000672386 /* JanusRequests.swift */,
 				A053DC11262EF70500672386 /* JanusConnection.swift */,
 				A053DC14262EF92000672386 /* JanusRoomManager.swift */,
@@ -227,7 +227,7 @@
 				FB97AB41262FC74D00573B3B /* ProgressHUD.swift in Sources */,
 				A053DC0F262EF6F000672386 /* JanusRequests.swift in Sources */,
 				FBEAC109262FB7B1008CDC23 /* VideoRoomCollectionViewCell.swift in Sources */,
-				A053DC0C262EF6D500672386 /* WebSocketSignalingClient.swift in Sources */,
+				A053DC0C262EF6D500672386 /* SignalingClient.swift in Sources */,
 				A053DC08262EF68A00672386 /* WebRTCClient.swift in Sources */,
 				FB97AB44262FD4AF00573B3B /* Config.swift in Sources */,
 				FBEAC105262FB0CA008CDC23 /* VideoRoomViewController.swift in Sources */,

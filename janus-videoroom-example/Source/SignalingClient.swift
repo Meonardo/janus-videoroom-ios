@@ -1,5 +1,5 @@
 //
-//  WebSocketSignalingClient.swift
+//  SignalingClient.swift
 //  janus-videoroom-example
 //
 //  Created by Meonardo on 2021/4/20.
@@ -9,37 +9,35 @@ import Foundation
 import Starscream
 import WebRTC
 
-protocol WebSocketSignalingClientDelegate: class {
-    /// Connecting States
-    func signalingClient(didChangeState state: WebSocketConnectState)
+enum SignalingConnectionState {
+	case connected([String: String])
+	case disconnected(String, UInt16)
+	case error(Error?)
+	case cancelled
+}
+
+protocol SignalingClientConnectionDelegate: class {
+    func signalingClient(didChangeState state: SignalingConnectionState)
+}
+
+protocol JanusResponseHandler: class {
+	func janusHandler(received remoteSdp: RTCSessionDescription, handleID: Int64)
+	func janusHandler(received candidate: RTCIceCandidate)
+	func janusHandler(attachedSelf handleID: Int64)
 	
-    /// Janus Logic
-	func signalingClient(didReceiveRemoteSdp sdp: RTCSessionDescription, handleID: Int64)
-	func signalingClient(didReceiveCandidate candidate: RTCIceCandidate)
-	func signalingClient(didAttach handleID: Int64, sessionID: Int64)
-	func signalingClient(didJoinRoom room: JanusJoinedRoom)
-	func signalingClient(didLeaveRoom room: JanusJoinedRoom)
-	func signalingClient(didSubscribeAttach handleID: Int64, publisher: JanusPublisher)
+	func janusHandler(joinedRoom handleID: Int64)
+	func janusHandler(leftRoom handleID: Int64, reason: String?)
+	
+	func janusHandler(didAttach publisher: JanusPublisher, handleID: Int64)
+	
+	func janusHandlerDidDestroyRoom()
 }
 
-enum WebSocketConnectState {
-    case connected([String: String])
-    case disconnected(String, UInt16)
-    case error(Error?)
-    case cancelled
-}
+class SignalingClient {
 
-/// Notifications
-extension WebSocketSignalingClient {
-	/// Object: [String: Any] , contains: handleID & hangup reason
-	static var didReciveLeaveNotification = Notification.Name("kDidReciveLeaveNotification")
-	/// Object: `JanusConnection`
-	static var didStartSubscribingNewPublisherNotification = Notification.Name("kDidStartSubscribingNewPublisherNotification")
-}
-
-class WebSocketSignalingClient {
-
-	var delegate: WebSocketSignalingClientDelegate?
+	weak var connectionDelegate: SignalingClientConnectionDelegate?
+	weak var responseHandler: JanusResponseHandler?
+	
     /// 是否已经建立连接
     var isConnected: Bool = false
     
@@ -82,10 +80,17 @@ class WebSocketSignalingClient {
 		print("==============> Send WebSocket Message: \(msg) \n")
 		socket.write(data: data)
 	}
+	
+	/// Reconnect WebSocket After Cancelation or Error
+	private func reconnect() {
+		DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
+			self.connect()
+		}
+	}
 }
 
 /// Timers & Keep alive
-extension WebSocketSignalingClient {
+extension SignalingClient {
 
 	private func configureTimer() {
 		if timer != nil {
@@ -108,7 +113,7 @@ extension WebSocketSignalingClient {
 }
 
 /// Janus Requests
-extension WebSocketSignalingClient {
+extension SignalingClient {
 	/// 加入房间
 	/// - Parameter room: 房间号
 	func createRoom(room: Int) {
@@ -242,20 +247,18 @@ extension WebSocketSignalingClient {
 }
 
 /// WebSocketDelegate
-extension WebSocketSignalingClient: WebSocketDelegate {
+extension SignalingClient: WebSocketDelegate {
 	
 	func didReceive(event: WebSocketEvent, client: WebSocket) {
 		switch event {
 		case .connected(let userInfo):
             isConnected = true
-            delegate?.signalingClient(didChangeState: .connected(userInfo))
+			connectionDelegate?.signalingClient(didChangeState: .connected(userInfo))
 		case .disconnected(let reason, let code):
             isConnected = false
-            delegate?.signalingClient(didChangeState: .disconnected(reason, code))
+			connectionDelegate?.signalingClient(didChangeState: .disconnected(reason, code))
             /// Try to reconnect
-			DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
-				self.connect()
-			}
+			reconnect()
 		case .text(let text):
 			processReceivedMessage(text: text)
 		case .binary:
@@ -270,17 +273,18 @@ extension WebSocketSignalingClient: WebSocketDelegate {
 			break
 		case .cancelled:
             isConnected = false
-            delegate?.signalingClient(didChangeState: .cancelled)
+			reconnect()
+			connectionDelegate?.signalingClient(didChangeState: .cancelled)
 			break
 		case .error(let error):
             isConnected = false
-            delegate?.signalingClient(didChangeState: .error(error))
+			connectionDelegate?.signalingClient(didChangeState: .error(error))
 		}
 	}
 }
 
 /// Procesing
-extension WebSocketSignalingClient {
+extension SignalingClient {
 	
 	private func processReceivedMessage(text: String) {
 		print("<============== Receive WebSocket Message: \(text) \n")
@@ -302,15 +306,15 @@ extension WebSocketSignalingClient {
 						sendAttachRequest(id: id)
 					} else if transaction == "Attach" {
 						/// 获得 handle_id
-						delegate?.signalingClient(didAttach: id, sessionID: roomManager.sessionID)
+						responseHandler?.janusHandler(attachedSelf: id)
 						sendJoinRoomRequest(id: roomManager.sessionID, handleID: id)
 					} else if transaction.hasPrefix("Attach.") {
 						/// Attached 成功
 						guard let last = transaction.components(separatedBy: ".").last, let publisherID = Int64(last) else { return }
 						guard let room = roomManager.currentRoom, let publisher = room.publisher(from: publisherID) else { return }
-						
-						delegate?.signalingClient(didSubscribeAttach: id, publisher: publisher)
-						
+						///
+						responseHandler?.janusHandler(didAttach: publisher, handleID: id)
+						///
 						sendSubscribeRequest(room: room, publisher: publisher, handleID: id)
 					}
 				}
@@ -328,12 +332,10 @@ extension WebSocketSignalingClient {
 							processConfigures(data: data)
 						} else if transaction == "SubscribeJoin" {
 							processOffer(data: data)
-						} else if transaction == "Candidate" {
-
 						} else if transaction == "Start" {
 							processSubscribeStarted(data: data)
 						} else if transaction == "Destroy" {
-							leaveRoomFinished()
+							destroyRoomFinished()
 						}
 						
 						/// Events
@@ -355,10 +357,13 @@ extension WebSocketSignalingClient {
 	private func processJoinedRoom(data: Data) {
 		do {
 			let joined = try data.decoded() as JanusJoinedRoom
+			/// Save the room just joined
 			roomManager.currentRoom = joined
-			delegate?.signalingClient(didJoinRoom: joined)
+			/// 
+			responseHandler?.janusHandler(joinedRoom: roomManager.handleID)
+			/// Send keep-alive cmd
 			configureTimer()
-			/// attach 发布者
+			/// Attach 发布者
 			joined.publishers.forEach{( attach(publisher: $0) )}
 		} catch {
 			print(error)
@@ -371,7 +376,7 @@ extension WebSocketSignalingClient {
 		
 		let jsepType = RTCSessionDescription.type(for: type)
 		let remoteSdp = RTCSessionDescription(type: jsepType, sdp: sdp)
-		delegate?.signalingClient(didReceiveRemoteSdp: remoteSdp, handleID: roomManager.handleID)
+		responseHandler?.janusHandler(received: remoteSdp, handleID: roomManager.handleID)
 	}
 	
 	private func processOffer(data: [String: Any]) {
@@ -383,16 +388,15 @@ extension WebSocketSignalingClient {
 		
 		let jsepType = RTCSessionDescription.type(for: type)
 		let remoteSdp = RTCSessionDescription(type: jsepType, sdp: sdp)
-		delegate?.signalingClient(didReceiveRemoteSdp: remoteSdp, handleID: handleID)
+		responseHandler?.janusHandler(received: remoteSdp, handleID: handleID)
 	}
 	
 	private func processEvents(data: [String: Any]) {
 		
 	}
 	
-	private func leaveRoomFinished() {
-		guard let currentRoom = roomManager.currentRoom else { return }
-		delegate?.signalingClient(didLeaveRoom: currentRoom)
+	private func destroyRoomFinished() {
+		responseHandler?.janusHandlerDidDestroyRoom()
 	}
 	
 	private func processJoinedPublisher(data: [String: Any]) {
@@ -408,31 +412,22 @@ extension WebSocketSignalingClient {
 			/// 排除重复
 			return
 		}
-		/// 保存数据
+		/// Save Publisher to Local 保存数据
 		currentRoom.publishers.append(publisher)
-		/// attach 发布者
+		/// Attach Publisher 发布者
 		attach(publisher: publisher)
 	}
 	
+	/// Subscribe Started
 	private func processSubscribeStarted(data: [String: Any]) {
 		guard let handleID = data["sender"] as? Int64 else { return }
-		guard let connection = roomManager.connection(for: handleID) else { return }
-		NotificationCenter.default.post(name: Self.didStartSubscribingNewPublisherNotification, object: connection, userInfo: nil)
+		responseHandler?.janusHandler(joinedRoom: handleID)
 	}
 	
 	private func processHangup(data: [String: Any]) {
 		guard let handleID = data["sender"] as? Int64 else { return }
-		let hangupReason = data["reason"] as? String ?? "No Reason"
+		let reason = data["reason"] as? String ?? "No Reason"
 		
-		if handleID == roomManager.handleID {
-			/// 不处理本机 unpublish 事件
-			return
-		}
-		/// Post Notification
-		NotificationCenter.default.post(name: Self.didReciveLeaveNotification, object: ["handleID": handleID, "reason": hangupReason], userInfo: nil)
-		/// Update JanusSessionManager.Connections
-		let removedPublisherID = roomManager.connection(for: handleID)?.publisher.id
-		roomManager.currentRoom?.publishers.removeAll(where: { $0.id == removedPublisherID })
-		roomManager.connections.removeAll(where: { $0.handleID == handleID })
+		responseHandler?.janusHandler(leftRoom: handleID, reason: reason)
 	}
 }

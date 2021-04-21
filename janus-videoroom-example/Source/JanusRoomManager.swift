@@ -12,14 +12,18 @@ import WebRTC
 extension JanusRoomManager {
     /// Signaling State Change Notification, Object: `WebSocketConnectState`
     static let signalingStateChangeNote = Notification.Name("kSignalingStateChangeNote")
-    /// Event for creating(true) a room or destroying(false) a room, 创建或者离开房间事件回调, Object: `Bool`
+    /// Event for creating(true) or destroying(false) a room, 创建或者离开房间事件回调, Object: `Bool`
     static let roomStateChangeNote = Notification.Name("kRoomStateChangeNote")
     /// WebRTC Client State Change Events, Object: `(WebRTCClient, RTCIceConnectionState)`
     static let rtcClientStateChangeNote = Notification.Name("kRTCClientStateChangeNote")
+	/// Object: [String: Any] , contains keys: `handleID` & `reason`
+	static let publisherDidLeaveRoomNote = Notification.Name("kPublisherDidLeaveRoomNote")
+	/// New publisher Joined the room, Object: `JanusConnection`
+	static let publisherDidJoinRoomNote = Notification.Name("kPublisherDidJoinRoomNote")
 }
 
-/// 当前仅同时处理一个房间, 切换房间请先调用 `destroy`,  并更改房间号
-/// Currently Support Single Room at them same time
+/// 当前仅同时处理一个房间, 切换房间请先调用 `JanusRoomManager.reset()`,  并更改房间号
+/// Currently Support Single Room at the same time
 final class JanusRoomManager {
 	
 	static let shared = JanusRoomManager()
@@ -38,10 +42,10 @@ final class JanusRoomManager {
 	var connections: [JanusConnection] = []
     /// WebSocket Signaling Client
     /// Handle Send & Process Jannus Messages
-    var signalingClient: WebSocketSignalingClient
+    var signalingClient: SignalingClient
     
 	private init() {
-        signalingClient = WebSocketSignalingClient(url: Config.signalingServerURL)
+        signalingClient = SignalingClient(url: Config.signalingServerURL)
     }
     
     /// 重置, 当离开房间后需要调用此方法
@@ -82,7 +86,8 @@ extension JanusRoomManager {
         if signalingClient.isConnected {
             return
         }
-        signalingClient.delegate = self
+        signalingClient.connectionDelegate = self
+		signalingClient.responseHandler = self
         signalingClient.connect()
     }
     
@@ -112,72 +117,97 @@ extension JanusRoomManager {
 }
  
 /// WebSocketSignalingClientDelegate
-extension JanusRoomManager: WebSocketSignalingClientDelegate {
+extension JanusRoomManager: SignalingClientConnectionDelegate {
     
-    func signalingClient(didChangeState state: WebSocketConnectState) {
+    func signalingClient(didChangeState state: SignalingConnectionState) {
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: Self.signalingStateChangeNote, object: state)
         }
     }
-    
-    func signalingClient(didReceiveRemoteSdp sdp: RTCSessionDescription, handleID: Int64) {
-        print("Received remote sdp")
-        let rtcClient = connection(for: handleID)?.rtcClient
-        rtcClient?.set(remoteSdp: sdp) { [weak self] (error) in
-            guard let self = self else { return }
-            
-            if handleID == self.handleID {
-                /// Local
-                
-            } else {
-                /// Others
-                rtcClient?.answer { [weak self] (sdp) in
-                    guard let self = self else { return }
-                    self.signalingClient.sendAnswer(sdp: sdp.sdp, handleID: handleID)
-                }
-            }
-        }
-    }
-    
-    func signalingClient(didReceiveCandidate candidate: RTCIceCandidate) {
-        print("Received remote candidate")
-    }
-    
-    /// Attached as **Publisher**
-    func signalingClient(didAttach handleID: Int64, sessionID: Int64) {
-        let rtcClient = WebRTCClient(iceServers: Config.webRTCIceServers, id: "\(handleID)")
-        rtcClient.delegate = self
-        let localPublisher = JanusPublisher(id: sessionID, display: UIDevice.current.name)
-        let localConnection = JanusConnection(handleID: handleID, publisher: localPublisher)
-        localConnection.rtcClient = rtcClient
-        connections.insert(localConnection, at: 0)
-    }
-    
-    /// Join a room as **Publisher**
-    func signalingClient(didJoinRoom room: JanusJoinedRoom) {
-        localConnection?.rtcClient?.offer(completion: { [weak self] (sdp) in
-            guard let self = self else { return }
-            self.signalingClient.sendOffer(sdp: sdp.sdp, isConfiguration: true)
-            /// Change Join Room State After Sending Local Offer to Remote.
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: Self.roomStateChangeNote, object: false)
-            }
-        })
-    }
-    
-    func signalingClient(didLeaveRoom room: JanusJoinedRoom) {
-        NotificationCenter.default.post(name: Self.roomStateChangeNote, object: true)
-        reset()
-    }
-    
-    /// Attached as **Subscriber**
-    func signalingClient(didSubscribeAttach handleID: Int64, publisher: JanusPublisher) {
-        let rtcClient = WebRTCClient(iceServers: Config.webRTCIceServers, id: "\(handleID)")
-        rtcClient.delegate = self
-        let connection = JanusConnection(handleID: handleID, publisher: publisher)
-        connection.rtcClient = rtcClient
-        connections.append(connection)
-    }
+}
+
+/// JanusResponseHandler
+extension JanusRoomManager: JanusResponseHandler {
+	
+	func janusHandler(received remoteSdp: RTCSessionDescription, handleID: Int64) {
+		print("Received remote sdp")
+		let rtcClient = connection(for: handleID)?.rtcClient
+		rtcClient?.set(remoteSdp: remoteSdp) { [weak self] (error) in
+			guard let self = self else { return }
+			
+			if handleID == self.handleID {
+				/// Local
+				
+			} else {
+				/// Others
+				rtcClient?.answer { [weak self] (sdp) in
+					guard let self = self else { return }
+					self.signalingClient.sendAnswer(sdp: sdp.sdp, handleID: handleID)
+				}
+			}
+		}
+	}
+	
+	func janusHandler(received candidate: RTCIceCandidate) {
+		print("Received remote candidate")
+	}
+	
+	func janusHandler(attachedSelf handleID: Int64) {
+		let rtcClient = WebRTCClient(iceServers: Config.webRTCIceServers, id: "\(handleID)")
+		rtcClient.delegate = self
+		let localPublisher = JanusPublisher(id: sessionID, display: roomDisplayName)
+		let localConnection = JanusConnection(handleID: handleID, publisher: localPublisher)
+		localConnection.rtcClient = rtcClient
+		connections.insert(localConnection, at: 0)
+	}
+	
+	func janusHandler(joinedRoom handleID: Int64) {
+		if handleID == self.handleID {
+			/// Joined as a publisher
+			localConnection?.rtcClient?.offer(completion: { [weak self] (sdp) in
+				guard let self = self else { return }
+				self.signalingClient.sendOffer(sdp: sdp.sdp, isConfiguration: true)
+				/// Change Join Room State After Sending Local Offer to Remote.
+				DispatchQueue.main.async {
+					NotificationCenter.default.post(name: Self.roomStateChangeNote, object: false)
+				}
+			})
+		} else {
+			/// Publisher has attached
+			guard let connection = connection(for: handleID) else { return }
+			NotificationCenter.default.post(name: Self.publisherDidJoinRoomNote, object: connection, userInfo: nil)
+		}
+	}
+	
+	func janusHandler(leftRoom handleID: Int64, reason: String?) {
+		if handleID == self.handleID {
+			/// 不处理本机 unpublish 事件
+			return
+		}
+		let targetConnection = connection(for: handleID)
+		/// Post Notification
+		NotificationCenter.default.post(name: Self.publisherDidLeaveRoomNote, object: targetConnection, userInfo: nil)
+		
+		/// Update Publishers
+		let removedPublisherID = targetConnection?.publisher.id
+		currentRoom?.publishers.removeAll(where: { $0.id == removedPublisherID })
+		/// Update Connections
+		connections.removeAll(where: { $0.handleID == handleID })
+	}
+	
+	func janusHandler(didAttach publisher: JanusPublisher, handleID: Int64) {
+		let rtcClient = WebRTCClient(iceServers: Config.webRTCIceServers, id: "\(handleID)")
+		rtcClient.delegate = self
+		let connection = JanusConnection(handleID: handleID, publisher: publisher)
+		connection.rtcClient = rtcClient
+		connections.append(connection)
+	}
+	
+	func janusHandlerDidDestroyRoom() {
+		NotificationCenter.default.post(name: Self.roomStateChangeNote, object: true)
+		/// Reset for next creating a room
+		reset()
+	}
 }
 
 extension JanusRoomManager: WebRTCClientDelegate {

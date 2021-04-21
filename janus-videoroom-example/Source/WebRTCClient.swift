@@ -295,9 +295,11 @@ extension WebRTCClient {
 	func hideVideo() {
 		setVideoEnabled(false)
 	}
+	
 	func showVideo() {
 		setVideoEnabled(true)
 	}
+	
 	private func setVideoEnabled(_ isEnabled: Bool) {
 		setTrackEnabled(RTCVideoTrack.self, isEnabled: isEnabled)
 	}

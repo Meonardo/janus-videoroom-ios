@@ -51,7 +51,7 @@ extension ViewController {
     }
     
     @objc private func signalingStateChange(_ sender: Notification) {
-        guard let state = sender.object as? WebSocketConnectState else { return }
+        guard let state = sender.object as? SignalingConnectionState else { return }
         
         switch state {
         case .connected:
