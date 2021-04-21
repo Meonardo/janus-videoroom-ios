@@ -1,5 +1,5 @@
 # About
-An iOS WebRTC example for janus videoroom plugin, written in Swift.
+An iOS example project for janus videoroom-plugin, written in Swift.
 
 ## Screenshots
 
@@ -11,6 +11,12 @@ An iOS WebRTC example for janus videoroom plugin, written in Swift.
 - camera sharing;
 - screen sharing(under developing).
 
+## Notice
+
+- This is example project and far from a demo, it is not fully test yet, welcome to make an issue.
+- Please connect signaling server first, 
+for example: `wss://janus.conf.meetecho.com/` or build your own janus sever.
+
 ## Sequence Diagram & Steps
 
 - Making...
@@ -21,3 +27,4 @@ An iOS WebRTC example for janus videoroom plugin, written in Swift.
 - [Starscream](https://github.com/daltoniam/Starscream).
 - [Codextended](https://github.com/JohnSundell/Codextended). 
 - [Alertift](https://github.com/sgr-ksmt/Alertift).
+- [ProgressHUD](https://github.com/relatedcode/ProgressHUD)
