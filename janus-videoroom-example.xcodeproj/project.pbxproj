@@ -25,6 +25,10 @@
 		A053DC1E262EFA4100672386 /* IceCandidate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC1B262EFA4100672386 /* IceCandidate.swift */; };
 		A053DC1F262EFA4100672386 /* SessionDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC1C262EFA4100672386 /* SessionDescription.swift */; };
 		A053DC20262EFA4100672386 /* RTCStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC1D262EFA4100672386 /* RTCStates.swift */; };
+		FB97AB41262FC74D00573B3B /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB97AB40262FC74D00573B3B /* ProgressHUD.swift */; };
+		FB97AB44262FD4AF00573B3B /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB97AB43262FD4AF00573B3B /* Config.swift */; };
+		FBEAC105262FB0CA008CDC23 /* VideoRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEAC104262FB0CA008CDC23 /* VideoRoomViewController.swift */; };
+		FBEAC109262FB7B1008CDC23 /* VideoRoomCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEAC108262FB7B1008CDC23 /* VideoRoomCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +49,10 @@
 		A053DC1B262EFA4100672386 /* IceCandidate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IceCandidate.swift; sourceTree = "<group>"; };
 		A053DC1C262EFA4100672386 /* SessionDescription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionDescription.swift; sourceTree = "<group>"; };
 		A053DC1D262EFA4100672386 /* RTCStates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RTCStates.swift; sourceTree = "<group>"; };
+		FB97AB40262FC74D00573B3B /* ProgressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressHUD.swift; sourceTree = "<group>"; };
+		FB97AB43262FD4AF00573B3B /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		FBEAC104262FB0CA008CDC23 /* VideoRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRoomViewController.swift; sourceTree = "<group>"; };
+		FBEAC108262FB7B1008CDC23 /* VideoRoomCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRoomCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,9 +89,9 @@
 			isa = PBXGroup;
 			children = (
 				A053DC06262EF61900672386 /* Source */,
+				FBEAC103262FB0A6008CDC23 /* Views */,
 				A053DBE5262EF24500672386 /* AppDelegate.swift */,
 				A053DBE7262EF24500672386 /* SceneDelegate.swift */,
-				A053DBE9262EF24500672386 /* ViewController.swift */,
 				A053DBEB262EF24500672386 /* Main.storyboard */,
 				A053DBEE262EF24700672386 /* Assets.xcassets */,
 				A053DBF0262EF24700672386 /* LaunchScreen.storyboard */,
@@ -101,6 +109,7 @@
 				A053DC0E262EF6F000672386 /* JanusRequests.swift */,
 				A053DC11262EF70500672386 /* JanusConnection.swift */,
 				A053DC14262EF92000672386 /* JanusRoomManager.swift */,
+				FB97AB43262FD4AF00573B3B /* Config.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -108,12 +117,23 @@
 		A053DC17262EF93D00672386 /* Venders */ = {
 			isa = PBXGroup;
 			children = (
+				FB97AB40262FC74D00573B3B /* ProgressHUD.swift */,
 				A053DC18262EF95B00672386 /* Codextended.swift */,
 				A053DC1B262EFA4100672386 /* IceCandidate.swift */,
 				A053DC1D262EFA4100672386 /* RTCStates.swift */,
 				A053DC1C262EFA4100672386 /* SessionDescription.swift */,
 			);
 			path = Venders;
+			sourceTree = "<group>";
+		};
+		FBEAC103262FB0A6008CDC23 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A053DBE9262EF24500672386 /* ViewController.swift */,
+				FBEAC104262FB0CA008CDC23 /* VideoRoomViewController.swift */,
+				FBEAC108262FB7B1008CDC23 /* VideoRoomCollectionViewCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -204,9 +224,13 @@
 				A053DBE6262EF24500672386 /* AppDelegate.swift in Sources */,
 				A053DC19262EF95B00672386 /* Codextended.swift in Sources */,
 				A053DBE8262EF24500672386 /* SceneDelegate.swift in Sources */,
+				FB97AB41262FC74D00573B3B /* ProgressHUD.swift in Sources */,
 				A053DC0F262EF6F000672386 /* JanusRequests.swift in Sources */,
+				FBEAC109262FB7B1008CDC23 /* VideoRoomCollectionViewCell.swift in Sources */,
 				A053DC0C262EF6D500672386 /* WebSocketSignalingClient.swift in Sources */,
 				A053DC08262EF68A00672386 /* WebRTCClient.swift in Sources */,
+				FB97AB44262FD4AF00573B3B /* Config.swift in Sources */,
+				FBEAC105262FB0CA008CDC23 /* VideoRoomViewController.swift in Sources */,
 				A053DC1E262EFA4100672386 /* IceCandidate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -355,7 +379,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = V7WNVHSHQS;
+				DEVELOPMENT_TEAM = W77429FCJY;
 				INFOPLIST_FILE = "janus-videoroom-example/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -375,7 +399,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = V7WNVHSHQS;
+				DEVELOPMENT_TEAM = W77429FCJY;
 				INFOPLIST_FILE = "janus-videoroom-example/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (

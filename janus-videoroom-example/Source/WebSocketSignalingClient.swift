@@ -10,24 +10,23 @@ import Starscream
 import WebRTC
 
 protocol WebSocketSignalingClientDelegate: class {
+    /// Connecting States
+    func signalingClient(didChangeState state: WebSocketConnectState)
 	
-	func signalingClientDidConnect()
-	func signalingClientDidDisconnect()
-	
-	func signalingClient(didReceiveMessage msg: String)
-	
+    /// Janus Logic
 	func signalingClient(didReceiveRemoteSdp sdp: RTCSessionDescription, handleID: Int64)
 	func signalingClient(didReceiveCandidate candidate: RTCIceCandidate)
-	
 	func signalingClient(didAttach handleID: Int64, sessionID: Int64)
 	func signalingClient(didJoinRoom room: JanusJoinedRoom)
 	func signalingClient(didLeaveRoom room: JanusJoinedRoom)
 	func signalingClient(didSubscribeAttach handleID: Int64, publisher: JanusPublisher)
 }
 
-extension WebSocketSignalingClientDelegate {
-	func signalingClient(didReceiveMessage msg: String) {}
-	func signalingClient(didReceiveCandidate candidate: RTCIceCandidate) {}
+enum WebSocketConnectState {
+    case connected([String: String])
+    case disconnected(String, UInt16)
+    case error(Error?)
+    case cancelled
 }
 
 /// Notifications
@@ -41,11 +40,15 @@ extension WebSocketSignalingClient {
 class WebSocketSignalingClient {
 
 	var delegate: WebSocketSignalingClientDelegate?
-	
+    /// 是否已经建立连接
+    var isConnected: Bool = false
+    
 	private var timer: Foundation.Timer?
 	private let socket: WebSocket
 	
-	private let roomManager = JanusRoomManager.shared
+    private var roomManager: JanusRoomManager {
+        JanusRoomManager.shared
+    }
 	
 	private lazy var encoder: JSONEncoder = {
 		return JSONEncoder()
@@ -107,9 +110,9 @@ extension WebSocketSignalingClient {
 /// Janus Requests
 extension WebSocketSignalingClient {
 	/// 加入房间
-	/// - Parameter roomID: 房间号
-	func createRoom(roomID: Int) {
-		let req = JanusCreateRoom(room: roomID)
+	/// - Parameter room: 房间号
+	func createRoom(room: Int) {
+		let req = JanusCreateRoom(room: room)
 		do {
 			let msg = try encoder.encode(req)
 			write(data: msg)
@@ -119,7 +122,7 @@ extension WebSocketSignalingClient {
 	}
 	
 	/// 离开房间
-	func leaveRoom() {
+	func destroyRoom() {
 		killTimer()
 		let sessionID = roomManager.sessionID
 		let req = JanusLeaveRoom(session_id: sessionID)
@@ -218,7 +221,7 @@ extension WebSocketSignalingClient {
 	}
 	
 	func sendAnswer(sdp: String, handleID: Int64) {
-		let req = JanusSubscribeStart(room: roomManager.roomID, sdp: sdp, handleID: handleID, sessionID: roomManager.sessionID)
+		let req = JanusSubscribeStart(room: roomManager.room, sdp: sdp, handleID: handleID, sessionID: roomManager.sessionID)
 		do {
 			let msg = try encoder.encode(req)
 			write(data: msg)
@@ -243,10 +246,13 @@ extension WebSocketSignalingClient: WebSocketDelegate {
 	
 	func didReceive(event: WebSocketEvent, client: WebSocket) {
 		switch event {
-		case .connected:
-			delegate?.signalingClientDidConnect()
-		case .disconnected:
-			delegate?.signalingClientDidDisconnect()
+		case .connected(let userInfo):
+            isConnected = true
+            delegate?.signalingClient(didChangeState: .connected(userInfo))
+		case .disconnected(let reason, let code):
+            isConnected = false
+            delegate?.signalingClient(didChangeState: .disconnected(reason, code))
+            /// Try to reconnect
 			DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
 				self.connect()
 			}
@@ -263,9 +269,12 @@ extension WebSocketSignalingClient: WebSocketDelegate {
 		case .reconnectSuggested:
 			break
 		case .cancelled:
+            isConnected = false
+            delegate?.signalingClient(didChangeState: .cancelled)
 			break
 		case .error(let error):
-			print("WebSocket Error: \(error?.localizedDescription ?? "")")
+            isConnected = false
+            delegate?.signalingClient(didChangeState: .error(error))
 		}
 	}
 }
