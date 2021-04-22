@@ -10,7 +10,7 @@ import WebRTC
 
 /// Public Notifications
 extension JanusRoomManager {
-    /// Signaling State Change Notification, Object: `WebSocketConnectState`
+    /// Signaling State Change Notification, Object: `SignalingConnectionState`
     static let signalingStateChangeNote = Notification.Name("kSignalingStateChangeNote")
     /// Event for creating(true) or destroying(false) a room, 创建或者离开房间事件回调, Object: `Bool`
     static let roomStateChangeNote = Notification.Name("kRoomStateChangeNote")
@@ -213,12 +213,13 @@ extension JanusRoomManager: JanusResponseHandler {
 extension JanusRoomManager: WebRTCClientDelegate {
     
     func webRTCClient(_ client: WebRTCClient, didDiscoverLocalCandidate candidate: RTCIceCandidate) {
-        print("discovered local candidate")
+        print("Discovered local candidate")
         guard let handleID = connection(for: client)?.handleID else { return }
         signalingClient.send(candidate: candidate, handleID: handleID)
     }
     
     func webRTCClient(_ client: WebRTCClient, didChangeConnectionState state: RTCIceConnectionState) {
+        print("Connection state did change: \(state.description)")
         NotificationCenter.default.post(name: Self.rtcClientStateChangeNote, object: (client, state))
     }
     
