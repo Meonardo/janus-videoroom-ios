@@ -1,19 +1,20 @@
 # About
 An iOS example project for janus videoroom-plugin, written in Swift.
 
-## Screenshots
-
-- Uploading...
-
 ## Features
 
 - 1 to many video conference;
 - camera sharing;
 - screen sharing(under developing).
 
+## Screenshots
+
+![Video Room](resource/screenshot%402x.png)
+
 ## Notice
 
-- This is an example project and far from a demo, it is not fully test yet, welcome to make an issue.
+- This repo is for sharing my learning WebRTC & janus video room experience, welcome to share yours.
+- This is an example project and far from a demo, it is not fully test yet, welcome to create an issue.
 
 ## Steps
 
