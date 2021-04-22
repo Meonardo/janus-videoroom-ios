@@ -13,14 +13,18 @@ An iOS example project for janus videoroom-plugin, written in Swift.
 
 ## Notice
 
-- This is example project and far from a demo, it is not fully test yet, welcome to make an issue.
-- Please connect signaling server first, 
-for example: `wss://janus.conf.meetecho.com/` or build your own janus sever.
+- This is an example project and far from a demo, it is not fully test yet, welcome to make an issue.
 
-## Sequence Diagram & Steps
+## Steps
 
-- Making...
+- Connect signaling server first(specific in `Config.signalingServerURL`), 
+for example: `wss://janus.conf.meetecho.com/ws` or build your own janus sever.
+- Input room number(such as: 1234), `1234` is higly recommended.
+- Hit `Join Room`, will joined the video room if nothing goes wrong.
 
+## Sequence Diagram
+
+- Uploading...
 
 ## External Libraries & their licenses
 - [WebRTC](https://github.com/stasel/WebRTC).
