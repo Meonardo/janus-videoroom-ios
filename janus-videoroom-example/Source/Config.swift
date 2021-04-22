@@ -8,8 +8,8 @@
 import Foundation
 
 struct Config {
-    
-    static let signalingServerURL = URL(string: "ws://192.168.31.239:8188")!
+    /// Janus Official Demo Signaling Server Address: wss://janus.conf.meetecho.com/ws
+    static let signalingServerURL = URL(string: "ws://192.168.5.99:8188")!
     
     static let webRTCIceServers: [String] = [
         "stun:stun.l.google.com:19302",

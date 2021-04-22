@@ -36,19 +36,20 @@ struct JanusJoinRoom: Codable {
 	struct Body: Codable {
 		var request = "join"
 		var ptype = "publisher"
-		var room: Int = 1234
-		var display = UIDevice.current.name
+		var room: Int
+        var display: String
 	}
 	
 	var janus = "message"
 	var session_id: Int64
 	var handle_id: Int64
 	var transaction = "JoinRoom"
-	var body: Body = Body()
+	var body: Body
 	
-	init(id: Int64, handleID: Int64) {
+    init(room: Int, id: Int64, handleID: Int64, display: String) {
 		self.session_id = id
 		self.handle_id = handleID
+        body = Body(room: room, display: display)
 	}
 }
 

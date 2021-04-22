@@ -89,7 +89,7 @@ class SignalingClient {
 	}
 }
 
-/// Timers & Keep alive
+/// Timer & Keep alive
 extension SignalingClient {
 
 	private func configureTimer() {
@@ -164,8 +164,12 @@ extension SignalingClient {
 	
 	/// 加入房间 as a Publisher
 	private func sendJoinRoomRequest(id: Int64, handleID: Int64) {
+        /// Save local handleID
 		roomManager.handleID = handleID
-		let req = JanusJoinRoom(id: id, handleID: handleID)
+        let room = roomManager.room
+        let display = roomManager.roomDisplayName
+        
+        let req = JanusJoinRoom(room: room, id: id, handleID: handleID, display: display)
 		do {
 			let msg = try encoder.encode(req)
 			write(data: msg)

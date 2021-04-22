@@ -43,7 +43,7 @@ class VideoRoomViewController: UIViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
-        print("VideoViewController deinit...")
+        print("VideoViewController is deinit...")
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -61,12 +61,12 @@ class VideoRoomViewController: UIViewController {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		UIApplication.shared.isIdleTimerDisabled = false
+		UIApplication.shared.isIdleTimerDisabled = true
 	}
 	
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
-		UIApplication.shared.isIdleTimerDisabled = true
+		UIApplication.shared.isIdleTimerDisabled = false
 	}
 }
 
