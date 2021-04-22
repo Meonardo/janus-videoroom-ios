@@ -23,11 +23,62 @@
 		A053DC15262EF92000672386 /* JanusRoomManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC14262EF92000672386 /* JanusRoomManager.swift */; };
 		A053DC19262EF95B00672386 /* Codextended.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC18262EF95B00672386 /* Codextended.swift */; };
 		A053DC20262EFA4100672386 /* RTCStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC1D262EFA4100672386 /* RTCStates.swift */; };
+		FB16827B26311B5A00641C9A /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB16827A26311B5A00641C9A /* ReplayKit.framework */; };
+		FB16827E26311B5A00641C9A /* SampleHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB16827D26311B5A00641C9A /* SampleHandler.swift */; };
+		FB16828526311B5A00641C9A /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB16827A26311B5A00641C9A /* ReplayKit.framework */; };
+		FB16828726311B5A00641C9A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB16828626311B5A00641C9A /* UIKit.framework */; };
+		FB16828A26311B5A00641C9A /* BroadcastSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB16828926311B5A00641C9A /* BroadcastSetupViewController.swift */; };
+		FB16828E26311B5A00641C9A /* BroadcastSetupUI.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FB16828426311B5A00641C9A /* BroadcastSetupUI.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FB16829126311B5A00641C9A /* Broadcast.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FB16827826311B5A00641C9A /* Broadcast.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FB48132F263153AF0010E58E /* Codextended.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC18262EF95B00672386 /* Codextended.swift */; };
+		FB481333263153BC0010E58E /* JanusConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC11262EF70500672386 /* JanusConnection.swift */; };
+		FB481334263153BC0010E58E /* SignalingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC0B262EF6D500672386 /* SignalingClient.swift */; };
+		FB481335263153BC0010E58E /* JanusRoomManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC14262EF92000672386 /* JanusRoomManager.swift */; };
+		FB481336263153BC0010E58E /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB97AB43262FD4AF00573B3B /* Config.swift */; };
+		FB481337263153BC0010E58E /* JanusRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC0E262EF6F000672386 /* JanusRequests.swift */; };
+		FB481338263153BC0010E58E /* WebRTCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC07262EF68A00672386 /* WebRTCClient.swift */; };
+		FB48134D26315E900010E58E /* RTCStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC1D262EFA4100672386 /* RTCStates.swift */; };
+		FB4813552631644E0010E58E /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = FB4813542631644E0010E58E /* Starscream */; };
+		FB481357263164510010E58E /* WebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = FB481356263164510010E58E /* WebRTC */; };
+		FB481366263174210010E58E /* RTCExternalSampleCapturer.m in Sources */ = {isa = PBXBuildFile; fileRef = FB481365263174210010E58E /* RTCExternalSampleCapturer.m */; };
+		FB481367263174210010E58E /* RTCExternalSampleCapturer.m in Sources */ = {isa = PBXBuildFile; fileRef = FB481365263174210010E58E /* RTCExternalSampleCapturer.m */; };
 		FB97AB41262FC74D00573B3B /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB97AB40262FC74D00573B3B /* ProgressHUD.swift */; };
 		FB97AB44262FD4AF00573B3B /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB97AB43262FD4AF00573B3B /* Config.swift */; };
 		FBEAC105262FB0CA008CDC23 /* VideoRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEAC104262FB0CA008CDC23 /* VideoRoomViewController.swift */; };
 		FBEAC109262FB7B1008CDC23 /* VideoRoomCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEAC108262FB7B1008CDC23 /* VideoRoomCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FB16828C26311B5A00641C9A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A053DBDA262EF24500672386 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FB16828326311B5A00641C9A;
+			remoteInfo = BroadcastSetupUI;
+		};
+		FB16828F26311B5A00641C9A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A053DBDA262EF24500672386 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FB16827726311B5A00641C9A;
+			remoteInfo = Broadcast;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FB16829826311B5A00641C9A /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				FB16829126311B5A00641C9A /* Broadcast.appex in Embed App Extensions */,
+				FB16828E26311B5A00641C9A /* BroadcastSetupUI.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A053DBE2262EF24500672386 /* janus-videoroom-example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "janus-videoroom-example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -45,6 +96,20 @@
 		A053DC14262EF92000672386 /* JanusRoomManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JanusRoomManager.swift; sourceTree = "<group>"; };
 		A053DC18262EF95B00672386 /* Codextended.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Codextended.swift; sourceTree = "<group>"; };
 		A053DC1D262EFA4100672386 /* RTCStates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RTCStates.swift; sourceTree = "<group>"; };
+		FB16827826311B5A00641C9A /* Broadcast.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Broadcast.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB16827A26311B5A00641C9A /* ReplayKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReplayKit.framework; path = System/Library/Frameworks/ReplayKit.framework; sourceTree = SDKROOT; };
+		FB16827D26311B5A00641C9A /* SampleHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleHandler.swift; sourceTree = "<group>"; };
+		FB16827F26311B5A00641C9A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FB16828426311B5A00641C9A /* BroadcastSetupUI.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BroadcastSetupUI.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB16828626311B5A00641C9A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		FB16828926311B5A00641C9A /* BroadcastSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BroadcastSetupViewController.swift; sourceTree = "<group>"; };
+		FB16828B26311B5A00641C9A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FB48133C263155AB0010E58E /* janus-videoroom-example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "janus-videoroom-example.entitlements"; sourceTree = "<group>"; };
+		FB48133D263159D70010E58E /* Broadcast.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Broadcast.entitlements; sourceTree = "<group>"; };
+		FB481362263174200010E58E /* janus-videoroom-example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "janus-videoroom-example-Bridging-Header.h"; sourceTree = "<group>"; };
+		FB481363263174200010E58E /* Broadcast-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Broadcast-Bridging-Header.h"; sourceTree = "<group>"; };
+		FB481364263174200010E58E /* RTCExternalSampleCapturer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCExternalSampleCapturer.h; sourceTree = "<group>"; };
+		FB481365263174210010E58E /* RTCExternalSampleCapturer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RTCExternalSampleCapturer.m; sourceTree = "<group>"; };
 		FB97AB40262FC74D00573B3B /* ProgressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressHUD.swift; sourceTree = "<group>"; };
 		FB97AB43262FD4AF00573B3B /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		FBEAC104262FB0CA008CDC23 /* VideoRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRoomViewController.swift; sourceTree = "<group>"; };
@@ -62,6 +127,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FB16827526311B5A00641C9A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB16827B26311B5A00641C9A /* ReplayKit.framework in Frameworks */,
+				FB481357263164510010E58E /* WebRTC in Frameworks */,
+				FB4813552631644E0010E58E /* Starscream in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB16828126311B5A00641C9A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB16828526311B5A00641C9A /* ReplayKit.framework in Frameworks */,
+				FB16828726311B5A00641C9A /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -69,6 +153,9 @@
 			isa = PBXGroup;
 			children = (
 				A053DBE4262EF24500672386 /* janus-videoroom-example */,
+				FB16827C26311B5A00641C9A /* Broadcast */,
+				FB16828826311B5A00641C9A /* BroadcastSetupUI */,
+				FB16827926311B5A00641C9A /* Frameworks */,
 				A053DBE3262EF24500672386 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -77,6 +164,8 @@
 			isa = PBXGroup;
 			children = (
 				A053DBE2262EF24500672386 /* janus-videoroom-example.app */,
+				FB16827826311B5A00641C9A /* Broadcast.appex */,
+				FB16828426311B5A00641C9A /* BroadcastSetupUI.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -84,6 +173,7 @@
 		A053DBE4262EF24500672386 /* janus-videoroom-example */ = {
 			isa = PBXGroup;
 			children = (
+				FB481361263173F10010E58E /* ObjC */,
 				A053DC06262EF61900672386 /* Source */,
 				FBEAC103262FB0A6008CDC23 /* Views */,
 				A053DBE5262EF24500672386 /* AppDelegate.swift */,
@@ -92,6 +182,7 @@
 				A053DBEE262EF24700672386 /* Assets.xcassets */,
 				A053DBF0262EF24700672386 /* LaunchScreen.storyboard */,
 				A053DBF3262EF24700672386 /* Info.plist */,
+				FB48133C263155AB0010E58E /* janus-videoroom-example.entitlements */,
 			);
 			path = "janus-videoroom-example";
 			sourceTree = "<group>";
@@ -120,6 +211,45 @@
 			path = Venders;
 			sourceTree = "<group>";
 		};
+		FB16827926311B5A00641C9A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FB16827A26311B5A00641C9A /* ReplayKit.framework */,
+				FB16828626311B5A00641C9A /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FB16827C26311B5A00641C9A /* Broadcast */ = {
+			isa = PBXGroup;
+			children = (
+				FB48133D263159D70010E58E /* Broadcast.entitlements */,
+				FB16827D26311B5A00641C9A /* SampleHandler.swift */,
+				FB16827F26311B5A00641C9A /* Info.plist */,
+			);
+			path = Broadcast;
+			sourceTree = "<group>";
+		};
+		FB16828826311B5A00641C9A /* BroadcastSetupUI */ = {
+			isa = PBXGroup;
+			children = (
+				FB16828926311B5A00641C9A /* BroadcastSetupViewController.swift */,
+				FB16828B26311B5A00641C9A /* Info.plist */,
+			);
+			path = BroadcastSetupUI;
+			sourceTree = "<group>";
+		};
+		FB481361263173F10010E58E /* ObjC */ = {
+			isa = PBXGroup;
+			children = (
+				FB481364263174200010E58E /* RTCExternalSampleCapturer.h */,
+				FB481365263174210010E58E /* RTCExternalSampleCapturer.m */,
+				FB481362263174200010E58E /* janus-videoroom-example-Bridging-Header.h */,
+				FB481363263174200010E58E /* Broadcast-Bridging-Header.h */,
+			);
+			path = ObjC;
+			sourceTree = "<group>";
+		};
 		FBEAC103262FB0A6008CDC23 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -140,10 +270,13 @@
 				A053DBDE262EF24500672386 /* Sources */,
 				A053DBDF262EF24500672386 /* Frameworks */,
 				A053DBE0262EF24500672386 /* Resources */,
+				FB16829826311B5A00641C9A /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				FB16828D26311B5A00641C9A /* PBXTargetDependency */,
+				FB16829026311B5A00641C9A /* PBXTargetDependency */,
 			);
 			name = "janus-videoroom-example";
 			packageProductDependencies = (
@@ -155,17 +288,63 @@
 			productReference = A053DBE2262EF24500672386 /* janus-videoroom-example.app */;
 			productType = "com.apple.product-type.application";
 		};
+		FB16827726311B5A00641C9A /* Broadcast */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FB16829526311B5A00641C9A /* Build configuration list for PBXNativeTarget "Broadcast" */;
+			buildPhases = (
+				FB16827426311B5A00641C9A /* Sources */,
+				FB16827526311B5A00641C9A /* Frameworks */,
+				FB16827626311B5A00641C9A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Broadcast;
+			packageProductDependencies = (
+				FB4813542631644E0010E58E /* Starscream */,
+				FB481356263164510010E58E /* WebRTC */,
+			);
+			productName = Broadcast;
+			productReference = FB16827826311B5A00641C9A /* Broadcast.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		FB16828326311B5A00641C9A /* BroadcastSetupUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FB16829226311B5A00641C9A /* Build configuration list for PBXNativeTarget "BroadcastSetupUI" */;
+			buildPhases = (
+				FB16828026311B5A00641C9A /* Sources */,
+				FB16828126311B5A00641C9A /* Frameworks */,
+				FB16828226311B5A00641C9A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BroadcastSetupUI;
+			productName = BroadcastSetupUI;
+			productReference = FB16828426311B5A00641C9A /* BroadcastSetupUI.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		A053DBDA262EF24500672386 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1220;
+				LastSwiftUpdateCheck = 1240;
 				LastUpgradeCheck = 1220;
 				TargetAttributes = {
 					A053DBE1262EF24500672386 = {
 						CreatedOnToolsVersion = 12.2;
+						LastSwiftMigration = 1240;
+					};
+					FB16827726311B5A00641C9A = {
+						CreatedOnToolsVersion = 12.4;
+						LastSwiftMigration = 1240;
+					};
+					FB16828326311B5A00641C9A = {
+						CreatedOnToolsVersion = 12.4;
 					};
 				};
 			};
@@ -188,6 +367,8 @@
 			projectRoot = "";
 			targets = (
 				A053DBE1262EF24500672386 /* janus-videoroom-example */,
+				FB16827726311B5A00641C9A /* Broadcast */,
+				FB16828326311B5A00641C9A /* BroadcastSetupUI */,
 			);
 		};
 /* End PBXProject section */
@@ -200,6 +381,20 @@
 				A053DBF2262EF24700672386 /* LaunchScreen.storyboard in Resources */,
 				A053DBEF262EF24700672386 /* Assets.xcassets in Resources */,
 				A053DBED262EF24500672386 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB16827626311B5A00641C9A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB16828226311B5A00641C9A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,6 +413,7 @@
 				A053DC19262EF95B00672386 /* Codextended.swift in Sources */,
 				A053DBE8262EF24500672386 /* SceneDelegate.swift in Sources */,
 				FB97AB41262FC74D00573B3B /* ProgressHUD.swift in Sources */,
+				FB481366263174210010E58E /* RTCExternalSampleCapturer.m in Sources */,
 				A053DC0F262EF6F000672386 /* JanusRequests.swift in Sources */,
 				FBEAC109262FB7B1008CDC23 /* VideoRoomCollectionViewCell.swift in Sources */,
 				A053DC0C262EF6D500672386 /* SignalingClient.swift in Sources */,
@@ -227,7 +423,45 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FB16827426311B5A00641C9A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB481333263153BC0010E58E /* JanusConnection.swift in Sources */,
+				FB16827E26311B5A00641C9A /* SampleHandler.swift in Sources */,
+				FB48132F263153AF0010E58E /* Codextended.swift in Sources */,
+				FB481338263153BC0010E58E /* WebRTCClient.swift in Sources */,
+				FB481335263153BC0010E58E /* JanusRoomManager.swift in Sources */,
+				FB481337263153BC0010E58E /* JanusRequests.swift in Sources */,
+				FB48134D26315E900010E58E /* RTCStates.swift in Sources */,
+				FB481334263153BC0010E58E /* SignalingClient.swift in Sources */,
+				FB481367263174210010E58E /* RTCExternalSampleCapturer.m in Sources */,
+				FB481336263153BC0010E58E /* Config.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB16828026311B5A00641C9A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB16828A26311B5A00641C9A /* BroadcastSetupViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FB16828D26311B5A00641C9A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FB16828326311B5A00641C9A /* BroadcastSetupUI */;
+			targetProxy = FB16828C26311B5A00641C9A /* PBXContainerItemProxy */;
+		};
+		FB16829026311B5A00641C9A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FB16827726311B5A00641C9A /* Broadcast */;
+			targetProxy = FB16828F26311B5A00641C9A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		A053DBEB262EF24500672386 /* Main.storyboard */ = {
@@ -368,8 +602,11 @@
 		A053DBF7262EF24700672386 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "janus-videoroom-example/janus-videoroom-example.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = W77429FCJY;
 				INFOPLIST_FILE = "janus-videoroom-example/Info.plist";
@@ -378,8 +615,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.meonardo.janus-videoroom-example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.videoroom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "janus-videoroom-example/ObjC/janus-videoroom-example-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -388,8 +627,11 @@
 		A053DBF8262EF24700672386 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "janus-videoroom-example/janus-videoroom-example.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = W77429FCJY;
 				INFOPLIST_FILE = "janus-videoroom-example/Info.plist";
@@ -398,8 +640,108 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.meonardo.janus-videoroom-example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.videoroom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "janus-videoroom-example/ObjC/janus-videoroom-example-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FB16829326311B5A00641C9A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = W77429FCJY;
+				INFOPLIST_FILE = BroadcastSetupUI/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.videoroom.BroadcastSetupUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FB16829426311B5A00641C9A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = W77429FCJY;
+				INFOPLIST_FILE = BroadcastSetupUI/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.videoroom.BroadcastSetupUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FB16829626311B5A00641C9A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Broadcast/Broadcast.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = W77429FCJY;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"TARGET_IS_EXTENSION=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = Broadcast/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "-DTARGET_IS_EXTENSION";
+				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.videoroom.Broadcast;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG TARGET_IS_EXTENSION";
+				SWIFT_OBJC_BRIDGING_HEADER = "janus-videoroom-example/ObjC/Broadcast-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FB16829726311B5A00641C9A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Broadcast/Broadcast.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = W77429FCJY;
+				GCC_PREPROCESSOR_DEFINITIONS = "TARGET_IS_EXTENSION=1";
+				INFOPLIST_FILE = Broadcast/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "-DTARGET_IS_EXTENSION";
+				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.videoroom.Broadcast;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = TARGET_IS_EXTENSION;
+				SWIFT_OBJC_BRIDGING_HEADER = "janus-videoroom-example/ObjC/Broadcast-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -422,6 +764,24 @@
 			buildConfigurations = (
 				A053DBF7262EF24700672386 /* Debug */,
 				A053DBF8262EF24700672386 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FB16829226311B5A00641C9A /* Build configuration list for PBXNativeTarget "BroadcastSetupUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB16829326311B5A00641C9A /* Debug */,
+				FB16829426311B5A00641C9A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FB16829526311B5A00641C9A /* Build configuration list for PBXNativeTarget "Broadcast" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB16829626311B5A00641C9A /* Debug */,
+				FB16829726311B5A00641C9A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -467,6 +827,16 @@
 			productName = Alertift;
 		};
 		A053DC03262EF59E00672386 /* WebRTC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A053DC02262EF59E00672386 /* XCRemoteSwiftPackageReference "WebRTC" */;
+			productName = WebRTC;
+		};
+		FB4813542631644E0010E58E /* Starscream */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A053DBFA262EF49B00672386 /* XCRemoteSwiftPackageReference "Starscream" */;
+			productName = Starscream;
+		};
+		FB481356263164510010E58E /* WebRTC */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A053DC02262EF59E00672386 /* XCRemoteSwiftPackageReference "WebRTC" */;
 			productName = WebRTC;

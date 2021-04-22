@@ -8,10 +8,14 @@
 import UIKit
 import WebRTC
 
-protocol WebRTCClientDelegate: AnyObject {
+protocol WebRTCClientDelegate: class {
 	func webRTCClient(_ client: WebRTCClient, didDiscoverLocalCandidate candidate: RTCIceCandidate)
 	func webRTCClient(_ client: WebRTCClient, didChangeConnectionState state: RTCIceConnectionState)
 	func webRTCClient(_ client: WebRTCClient, didAdd stream: RTCMediaStream)
+}
+
+extension WebRTCClientDelegate {
+    func webRTCClient(_ client: WebRTCClient, didCreate externalSampleCapturer: RTCExternalSampleCapturer?) {}
 }
 
 final class WebRTCClient: NSObject {
@@ -49,7 +53,7 @@ final class WebRTCClient: NSObject {
 		print("WebRTCClient is deinit...")
 	}
 	
-	required init(iceServers: [String], id: String) {
+    required init(iceServers: [String], id: String, delegate: WebRTCClientDelegate? = nil) {
 		let config = RTCConfiguration()
 		config.iceServers = [RTCIceServer(urlStrings: iceServers)]
 		
@@ -65,7 +69,8 @@ final class WebRTCClient: NSObject {
 		peerConnection = WebRTCClient.factory.peerConnection(with: config, constraints: constraints, delegate: nil)
 		
 		identifier = id
-		
+        self.delegate = delegate
+        
 		super.init()
 		
 		createMediaSenders()
@@ -82,6 +87,20 @@ final class WebRTCClient: NSObject {
 // MARK: - Configurations
 extension WebRTCClient {
 	
+    private func createMediaSenders() {
+        if #available(iOSApplicationExtension 13, *) {
+        } else {
+            // Audio
+            let audioTrack = createAudioTrack()
+            peerConnection.add(audioTrack, streamIds: [identifier])
+        }
+        
+        // Video
+        let videoTrack = createVideoTrack()
+        localVideoTrack = videoTrack
+        peerConnection.add(videoTrack, streamIds: [identifier])
+    }
+    
 	private func configureAudioSession() {
 		rtcAudioSession.lockForConfiguration()
 		do {
@@ -93,18 +112,6 @@ extension WebRTCClient {
 		rtcAudioSession.unlockForConfiguration()
 	}
 	
-	private func createMediaSenders() {
-		// Audio
-		let audioTrack = createAudioTrack()
-		peerConnection.add(audioTrack, streamIds: [identifier])
-		
-		// Video
-		let videoTrack = createVideoTrack()
-		localVideoTrack = videoTrack
-		peerConnection.add(videoTrack, streamIds: [identifier])
-		remoteVideoTrack = peerConnection.transceivers.first { $0.mediaType == .video }?.receiver.track as? RTCVideoTrack
-	}
-	
 	private func createAudioTrack() -> RTCAudioTrack {
 		let audioConstrains = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
 		let audioSource = WebRTCClient.factory.audioSource(with: audioConstrains)
@@ -114,12 +121,14 @@ extension WebRTCClient {
 	
 	private func createVideoTrack() -> RTCVideoTrack {
 		let videoSource = WebRTCClient.factory.videoSource()
-		
-		#if TARGET_OS_SIMULATOR
-		self.videoCapturer = RTCFileVideoCapturer(delegate: videoSource)
-		#else
-		self.videoCapturer = RTCCameraVideoCapturer(delegate: videoSource)
-		#endif
+    
+        #if TARGET_IS_EXTENSION
+        let videoCapturer = RTCExternalSampleCapturer(delegate: videoSource)
+        self.videoCapturer = videoCapturer
+        delegate?.webRTCClient(self, didCreate: videoCapturer)
+        #else
+        videoCapturer = RTCCameraVideoCapturer(delegate: videoSource)
+        #endif
 		
 		let videoTrack = WebRTCClient.factory.videoTrack(with: videoSource, trackId: "video0")
 		return videoTrack
@@ -179,6 +188,7 @@ extension WebRTCClient {
 		}
 	}
 	
+    @available(iOSApplicationExtension, unavailable)
 	func attach(renderer: RTCVideoRenderer, isLocal: Bool) {
 		if isLocal {
 			startCaptureLocalVideo(renderer: renderer)
@@ -187,6 +197,7 @@ extension WebRTCClient {
 		}
 	}
 	
+    @available(iOSApplicationExtension, unavailable)
 	func startCaptureLocalVideo(renderer: RTCVideoRenderer) {
 		guard let capturer = videoCapturer as? RTCCameraVideoCapturer else { return }
 		
@@ -205,7 +216,8 @@ extension WebRTCClient {
 			localVideoTrack?.add(renderer)
 		}
 	}
-	
+    
+    @available(iOSApplicationExtension, unavailable)
 	func switchCamera() {
 		guard let capturer = videoCapturer as? RTCCameraVideoCapturer else { return }
 		

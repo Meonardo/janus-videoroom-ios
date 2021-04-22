@@ -20,6 +20,8 @@ extension JanusRoomManager {
 	static let publisherDidLeaveRoomNote = Notification.Name("kPublisherDidLeaveRoomNote")
 	/// New publisher Joined the room, Object: `JanusConnection`
 	static let publisherDidJoinRoomNote = Notification.Name("kPublisherDidJoinRoomNote")
+    /// External SampleCapturer did create, Object: `RTCExternalSampleCapturer` optional
+    static let externalSampleCapturerDidCreateNote = Notification.Name("kExternalSampleCapturerDidCreateNote")
 }
 
 /// 当前仅同时处理一个房间, 切换房间请先调用 `JanusRoomManager.reset()`,  并更改房间号
@@ -153,8 +155,7 @@ extension JanusRoomManager: JanusResponseHandler {
 	}
 	
 	func janusHandler(attachedSelf handleID: Int64) {
-		let rtcClient = WebRTCClient(iceServers: Config.webRTCIceServers, id: "\(handleID)")
-		rtcClient.delegate = self
+        let rtcClient = WebRTCClient(iceServers: Config.webRTCIceServers, id: "\(handleID)", delegate: self)
 		let localPublisher = JanusPublisher(id: sessionID, display: roomDisplayName)
 		let localConnection = JanusConnection(handleID: handleID, publisher: localPublisher)
 		localConnection.rtcClient = rtcClient
@@ -225,5 +226,9 @@ extension JanusRoomManager: WebRTCClientDelegate {
     
     func webRTCClient(_ client: WebRTCClient, didAdd stream: RTCMediaStream) {
         
+    }
+    
+    func webRTCClient(_ client: WebRTCClient, didCreate externalSampleCapturer: RTCExternalSampleCapturer?) {
+        NotificationCenter.default.post(name: Self.externalSampleCapturerDidCreateNote, object: externalSampleCapturer)
     }
 }

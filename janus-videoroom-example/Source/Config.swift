@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import os.log
 
 struct Config {
     /// Janus Official Demo Signaling Server Address: wss://janus.conf.meetecho.com/ws
@@ -18,4 +19,7 @@ struct Config {
         "stun:stun3.l.google.com:19302",
         "stun:stun4.l.google.com:19302"
     ]
+    
+    static let sharedGroupName = "group.amdox.janus.videoroom"
+    static let lastJoinedRoomKey = "kLastJoinedRoomKey"
 }

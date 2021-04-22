@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     @IBOutlet private weak var segmentControl: UISegmentedControl!
     @IBOutlet private weak var websocketStatusLabel: UILabel!
     
-    static let lastJoinedRoomKey = "kLastJoinedRoomKey"
+    private let userDefault = UserDefaults(suiteName: Config.sharedGroupName)
     
     private var roomManager: JanusRoomManager {
         JanusRoomManager.shared
@@ -40,7 +40,7 @@ extension ViewController {
     private func prepare() {
         addNotificationObserver()
         
-        textField.text = UserDefaults.standard.string(forKey: Self.lastJoinedRoomKey)
+        textField.text = userDefault?.string(forKey: Config.lastJoinedRoomKey)
         
         roomManager.connect()
     }
@@ -77,7 +77,7 @@ extension ViewController {
             joinButton.isEnabled = true
         } else {
             /// Save for next launch
-            UserDefaults.standard.setValue(textField.text, forKey: Self.lastJoinedRoomKey)
+            userDefault?.setValue(textField.text, forKey: Config.lastJoinedRoomKey)
             
             joinButton.isEnabled = false
             let video = VideoRoomViewController.showVideo()
