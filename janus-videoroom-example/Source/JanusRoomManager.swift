@@ -46,6 +46,9 @@ final class JanusRoomManager {
     /// Handle Send & Process Jannus Messages
     var signalingClient: SignalingClient
     
+	/// 是否为屏幕分享
+	var isBroadcast: Bool = false
+	
 	private init() {
         signalingClient = SignalingClient(url: Config.signalingServerURL)
     }

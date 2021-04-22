@@ -367,8 +367,11 @@ extension SignalingClient {
 			responseHandler?.janusHandler(joinedRoom: roomManager.handleID)
 			/// Send keep-alive cmd
 			configureTimer()
-			/// Attach 发布者
-			joined.publishers.forEach{( attach(publisher: $0) )}
+			
+			if !roomManager.isBroadcast {
+				/// Attach all the active publisher, if NOT broadcast screen.
+				joined.publishers.forEach{( attach(publisher: $0) )}
+			}
 		} catch {
 			print(error)
 		}

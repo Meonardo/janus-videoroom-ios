@@ -8,23 +8,31 @@
 import UIKit
 import WebRTC
 import Alertift
+import ReplayKit
 
 extension VideoRoomViewController {
     /// Show Video Page
-    class func showVideo() -> VideoRoomViewController {
+	class func showVideo(isBroadcasting: Bool = false) -> VideoRoomViewController {
         let sb = UIStoryboard(name: "Main", bundle: nil)
         let view = sb.instantiateViewController(withIdentifier: "VideoRoomViewController") as! VideoRoomViewController
+		view.isBroadcasting = isBroadcasting
         return view
     }
 }
 
 class VideoRoomViewController: UIViewController {
 
+	private var isBroadcasting: Bool = false
+	
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var collectionView: UICollectionView!
+	@IBOutlet private weak var functionStackView: UIStackView!
     @IBOutlet private weak var speakerButton: UIButton!
     @IBOutlet private weak var microphonepButton: UIButton!
-    
+	@IBOutlet private weak var screenSharingPlaceholder: UIView!
+	
+	private var broadcastPicker: RPSystemBroadcastPickerView?
+	
     private weak var renderer: RTCMTLVideoView?
     
     private var roomManager: JanusRoomManager {
@@ -75,6 +83,7 @@ extension VideoRoomViewController {
     
     private func prepare() {
         addObservers()
+		configureBroadcastPicker()
         configureRenderer()
         configureDataSource()
         configureCollectionView()
@@ -82,6 +91,18 @@ extension VideoRoomViewController {
         titleLabel.text = currentConnection?.publisher.display
     }
     
+	private func configureBroadcastPicker() {
+		let picker = RPSystemBroadcastPickerView(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 44, height: 44)))
+		picker.preferredExtension = Config.broadcastBundleIdentifier
+		functionStackView.addArrangedSubview(picker)
+		picker.subviews.map({ $0 as? UIButton }).forEach({
+			$0?.imageView?.tintColor = .white
+			$0?.addTarget(self, action: #selector(self.startScreenSharing(_:)), for: .touchUpInside)
+		})
+		broadcastPicker = picker
+		picker.tintColor = .white
+	}
+	
     private func configureRenderer() {
         let renderer = RTCMTLVideoView(frame: view.bounds)
         view.insertSubview(renderer, at: 0)
@@ -101,7 +122,6 @@ extension VideoRoomViewController {
         collectionView.register(VideoRoomCollectionViewCell.self, forCellWithReuseIdentifier: VideoRoomCollectionViewCell.identifier)
         collectionView.delegate = self
         collectionView.dataSource = self
-        view.bringSubviewToFront(collectionView)
     }
     
     private func addObservers() {        
@@ -172,6 +192,14 @@ extension VideoRoomViewController {
 		}
 	}
     
+	@IBAction private func startScreenSharing(_ sender: UIButton) {
+		screenSharingPlaceholder.isHidden = false
+	}
+	
+	@IBAction private func stopScreenSharing(_ sender: UIButton) {
+		screenSharingPlaceholder.isHidden = true
+	}
+	
     @objc private func roomStateDidChange(_ sender: Notification) {
         guard let isDestroy = sender.object as? Bool else { return }
         

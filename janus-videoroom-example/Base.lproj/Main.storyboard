@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pMC-iR-UyN">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pMC-iR-UyN">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -46,7 +46,7 @@
                                         <imageReference key="image" image="camera.fill" catalog="system" symbolScale="medium"/>
                                     </segment>
                                     <segment title="">
-                                        <imageReference key="image" image="iphone.homebutton.landscape" catalog="system" symbolScale="large"/>
+                                        <imageReference key="image" image="record.circle" catalog="system" symbolScale="large"/>
                                     </segment>
                                 </segments>
                                 <connections>
@@ -120,6 +120,64 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8PW-xX-Blv">
+                                <rect key="frame" x="355" y="96" width="44" height="148"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7uU-id-KRc">
+                                        <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                        <viewLayoutGuide key="safeArea" id="sBI-OJ-6zG"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="7uU-id-KRc" secondAttribute="height" id="W6m-O6-fsp"/>
+                                        </constraints>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal">
+                                            <imageReference key="image" image="mic.fill" catalog="system" symbolScale="large"/>
+                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large" weight="semibold"/>
+                                        </state>
+                                        <state key="selected" image="mic.slash.fill" catalog="system"/>
+                                        <connections>
+                                            <action selector="micphoneAction:" destination="Qju-la-4ol" eventType="touchUpInside" id="XEB-GO-TMf"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NLe-7W-VJY">
+                                        <rect key="frame" x="0.0" y="52" width="44" height="44"/>
+                                        <viewLayoutGuide key="safeArea" id="7DR-Ig-9Pe"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="NLe-7W-VJY" secondAttribute="height" id="CGf-Fc-gpp"/>
+                                        </constraints>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal">
+                                            <imageReference key="image" image="speaker.wave.2.fill" catalog="system" symbolScale="large"/>
+                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large" weight="semibold"/>
+                                        </state>
+                                        <state key="selected" image="speaker.fill" catalog="system"/>
+                                        <connections>
+                                            <action selector="speakerAction:" destination="Qju-la-4ol" eventType="touchUpInside" id="QlJ-Xf-f4W"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m2f-Q8-CO4">
+                                        <rect key="frame" x="0.0" y="104" width="44" height="44"/>
+                                        <viewLayoutGuide key="safeArea" id="0gf-sB-0MJ"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="m2f-Q8-CO4" secondAttribute="height" id="Mtp-9h-JhB"/>
+                                        </constraints>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal">
+                                            <imageReference key="image" image="video.fill" catalog="system" symbolScale="large"/>
+                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large" weight="semibold"/>
+                                        </state>
+                                        <state key="selected" image="video.slash.fill" catalog="system"/>
+                                        <connections>
+                                            <action selector="videoAction:" destination="Qju-la-4ol" eventType="touchUpInside" id="FQd-bB-iEB"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="7uU-id-KRc" firstAttribute="width" secondItem="7uU-id-KRc" secondAttribute="height" id="2lE-hA-TK9"/>
+                                    <constraint firstAttribute="width" constant="44" id="nAI-yz-EGj"/>
+                                    <constraint firstItem="m2f-Q8-CO4" firstAttribute="width" secondItem="m2f-Q8-CO4" secondAttribute="height" id="nfi-0h-XEE"/>
+                                </constraints>
+                            </stackView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="PwX-OJ-Dt3">
                                 <rect key="frame" x="0.0" y="618" width="414" height="172"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -133,6 +191,43 @@
                                     <inset key="sectionInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                             </collectionView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cko-6g-uwK">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gza-pV-6S8">
+                                        <rect key="frame" x="126" y="419.5" width="162.5" height="57.5"/>
+                                        <string key="text">Cancel
+Screen Sharing</string>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="24"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t9H-bj-BFo">
+                                        <rect key="frame" x="175" y="336" width="64" height="63"/>
+                                        <viewLayoutGuide key="safeArea" id="do3-xx-UIt"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="64" id="CZ8-O0-1x9"/>
+                                            <constraint firstAttribute="height" constant="64" id="nEE-Gc-SCD"/>
+                                        </constraints>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal">
+                                            <imageReference key="backgroundImage" image="record.circle" catalog="system" symbolScale="medium"/>
+                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large" weight="regular"/>
+                                        </state>
+                                        <state key="selected" image="video.slash.fill" catalog="system"/>
+                                        <connections>
+                                            <action selector="stopScreenSharing:" destination="Qju-la-4ol" eventType="touchUpInside" id="2ED-Yd-6LA"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="gza-pV-6S8" firstAttribute="centerX" secondItem="cko-6g-uwK" secondAttribute="centerX" id="cWP-g1-fJN"/>
+                                    <constraint firstItem="gza-pV-6S8" firstAttribute="centerY" secondItem="cko-6g-uwK" secondAttribute="centerY" id="eJp-cf-FrR"/>
+                                    <constraint firstItem="t9H-bj-BFo" firstAttribute="centerX" secondItem="gza-pV-6S8" secondAttribute="centerX" id="fbB-84-lDl"/>
+                                    <constraint firstItem="gza-pV-6S8" firstAttribute="top" secondItem="t9H-bj-BFo" secondAttribute="bottom" constant="20" id="oan-ON-JYb"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o4d-yK-BRM">
                                 <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                                 <subviews>
@@ -187,82 +282,30 @@
                                     <constraint firstItem="n9X-bX-wfJ" firstAttribute="top" secondItem="o4d-yK-BRM" secondAttribute="top" id="aTy-wl-99y"/>
                                 </constraints>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8PW-xX-Blv">
-                                <rect key="frame" x="355" y="96" width="44" height="148"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7uU-id-KRc">
-                                        <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
-                                        <viewLayoutGuide key="safeArea" id="sBI-OJ-6zG"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="7uU-id-KRc" secondAttribute="height" id="W6m-O6-fsp"/>
-                                        </constraints>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal">
-                                            <imageReference key="image" image="mic.fill" catalog="system" symbolScale="large"/>
-                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large" weight="semibold"/>
-                                        </state>
-                                        <state key="selected" image="mic.slash.fill" catalog="system"/>
-                                        <connections>
-                                            <action selector="micphoneAction:" destination="Qju-la-4ol" eventType="touchUpInside" id="XEB-GO-TMf"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NLe-7W-VJY">
-                                        <rect key="frame" x="0.0" y="52" width="44" height="44"/>
-                                        <viewLayoutGuide key="safeArea" id="7DR-Ig-9Pe"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="NLe-7W-VJY" secondAttribute="height" id="CGf-Fc-gpp"/>
-                                        </constraints>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal">
-                                            <imageReference key="image" image="speaker.wave.2.fill" catalog="system" symbolScale="large"/>
-                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large" weight="semibold"/>
-                                        </state>
-                                        <state key="selected" image="speaker.fill" catalog="system"/>
-                                        <connections>
-                                            <action selector="speakerAction:" destination="Qju-la-4ol" eventType="touchUpInside" id="QlJ-Xf-f4W"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m2f-Q8-CO4">
-                                        <rect key="frame" x="0.0" y="104" width="44" height="44"/>
-                                        <viewLayoutGuide key="safeArea" id="0gf-sB-0MJ"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="m2f-Q8-CO4" secondAttribute="height" id="Mtp-9h-JhB"/>
-                                        </constraints>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal">
-                                            <imageReference key="image" image="video.fill" catalog="system" symbolScale="large"/>
-                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large" weight="semibold"/>
-                                        </state>
-                                        <state key="selected" image="video.slash.fill" catalog="system"/>
-                                        <connections>
-                                            <action selector="videoAction:" destination="Qju-la-4ol" eventType="touchUpInside" id="LzJ-Os-PxX"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="7uU-id-KRc" firstAttribute="width" secondItem="7uU-id-KRc" secondAttribute="height" id="2lE-hA-TK9"/>
-                                    <constraint firstAttribute="width" constant="44" id="nAI-yz-EGj"/>
-                                    <constraint firstItem="m2f-Q8-CO4" firstAttribute="width" secondItem="m2f-Q8-CO4" secondAttribute="height" id="nfi-0h-XEE"/>
-                                </constraints>
-                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="lP5-g4-0ic"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstAttribute="bottom" secondItem="cko-6g-uwK" secondAttribute="bottom" id="5ig-ed-zsJ"/>
                             <constraint firstItem="o4d-yK-BRM" firstAttribute="leading" secondItem="lP5-g4-0ic" secondAttribute="leading" id="8yh-Oe-hXu"/>
+                            <constraint firstItem="cko-6g-uwK" firstAttribute="trailing" secondItem="cfX-2S-00a" secondAttribute="trailing" id="CYt-po-sgJ"/>
                             <constraint firstItem="PwX-OJ-Dt3" firstAttribute="leading" secondItem="lP5-g4-0ic" secondAttribute="leading" id="Ctf-nD-EO3"/>
                             <constraint firstItem="8PW-xX-Blv" firstAttribute="centerX" secondItem="n9X-bX-wfJ" secondAttribute="centerX" id="JiE-hD-xUq"/>
                             <constraint firstItem="lP5-g4-0ic" firstAttribute="bottom" secondItem="PwX-OJ-Dt3" secondAttribute="bottom" constant="72" id="arf-IM-7GT"/>
                             <constraint firstItem="PwX-OJ-Dt3" firstAttribute="trailing" secondItem="lP5-g4-0ic" secondAttribute="trailing" id="cfa-Mn-YC3"/>
+                            <constraint firstItem="cko-6g-uwK" firstAttribute="top" secondItem="cfX-2S-00a" secondAttribute="top" id="cyZ-sk-LyX"/>
                             <constraint firstItem="lP5-g4-0ic" firstAttribute="top" secondItem="o4d-yK-BRM" secondAttribute="top" id="gsd-eg-aPB"/>
                             <constraint firstItem="8PW-xX-Blv" firstAttribute="top" secondItem="o4d-yK-BRM" secondAttribute="bottom" constant="8" id="jKV-xF-QzK"/>
                             <constraint firstItem="o4d-yK-BRM" firstAttribute="trailing" secondItem="lP5-g4-0ic" secondAttribute="trailing" id="kV9-Zf-ez8"/>
+                            <constraint firstItem="cko-6g-uwK" firstAttribute="leading" secondItem="cfX-2S-00a" secondAttribute="leading" id="onG-9T-ULc"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="rt7-CX-nbf"/>
                     <connections>
                         <outlet property="collectionView" destination="PwX-OJ-Dt3" id="9Cd-V4-ElZ"/>
+                        <outlet property="functionStackView" destination="8PW-xX-Blv" id="HdG-Iq-Ty1"/>
                         <outlet property="microphonepButton" destination="7uU-id-KRc" id="eaf-wD-e2V"/>
+                        <outlet property="screenSharingPlaceholder" destination="cko-6g-uwK" id="vX6-r6-Lw4"/>
                         <outlet property="speakerButton" destination="NLe-7W-VJY" id="RDx-eA-Wf1"/>
                         <outlet property="titleLabel" destination="x8n-jB-azz" id="3g4-4v-Wle"/>
                     </connections>
@@ -294,9 +337,9 @@
         <image name="arrow.backward" catalog="system" width="128" height="98"/>
         <image name="camera.fill" catalog="system" width="128" height="94"/>
         <image name="camera.rotate.fill" catalog="system" width="128" height="94"/>
-        <image name="iphone.homebutton.landscape" catalog="system" width="128" height="75"/>
         <image name="mic.fill" catalog="system" width="108" height="128"/>
         <image name="mic.slash.fill" catalog="system" width="108" height="128"/>
+        <image name="record.circle" catalog="system" width="128" height="121"/>
         <image name="speaker.fill" catalog="system" width="128" height="128"/>
         <image name="speaker.wave.2.fill" catalog="system" width="128" height="90"/>
         <image name="video.fill" catalog="system" width="128" height="82"/>

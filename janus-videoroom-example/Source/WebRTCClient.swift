@@ -12,6 +12,7 @@ protocol WebRTCClientDelegate: class {
 	func webRTCClient(_ client: WebRTCClient, didDiscoverLocalCandidate candidate: RTCIceCandidate)
 	func webRTCClient(_ client: WebRTCClient, didChangeConnectionState state: RTCIceConnectionState)
 	func webRTCClient(_ client: WebRTCClient, didAdd stream: RTCMediaStream)
+	func webRTCClient(_ client: WebRTCClient, didCreate externalSampleCapturer: RTCExternalSampleCapturer?)
 }
 
 extension WebRTCClientDelegate {
