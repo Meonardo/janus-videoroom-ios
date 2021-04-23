@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pMC-iR-UyN">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pMC-iR-UyN">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -18,23 +18,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="7WM-4V-IU7">
-                                <rect key="frame" x="25" y="244" width="267" height="24"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Signaling Status:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="phO-yB-ab3">
-                                        <rect key="frame" x="0.0" y="0.0" width="146.5" height="24"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Not Connected" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fik-8e-Xb5">
-                                        <rect key="frame" x="154.5" y="0.0" width="112.5" height="24"/>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                            </stackView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="pC9-Oc-L7j">
                                 <rect key="frame" x="127" y="172" width="160" height="33"/>
                                 <constraints>
@@ -54,7 +37,7 @@
                                 </connections>
                             </segmentedControl>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="2X2-Rg-ab2">
-                                <rect key="frame" x="25" y="300" width="364" height="44"/>
+                                <rect key="frame" x="25" y="308" width="364" height="44"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="1234" borderStyle="roundedRect" placeholder="Input Room Number" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rNR-MD-mdM">
                                         <rect key="frame" x="0.0" y="0.0" width="248.5" height="44"/>
@@ -85,6 +68,21 @@
                                     <constraint firstAttribute="height" constant="44" id="DyL-T5-i1Y"/>
                                 </constraints>
                             </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Not Connected" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fik-8e-Xb5">
+                                <rect key="frame" x="179.5" y="242.5" width="209.5" height="19.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Signaling Status:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="phO-yB-ab3">
+                                <rect key="frame" x="25" y="236" width="146.5" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="32" id="XOe-cR-96C"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -92,11 +90,14 @@
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="2X2-Rg-ab2" secondAttribute="trailing" constant="25" id="CFl-n1-QQE"/>
                             <constraint firstItem="pC9-Oc-L7j" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="32" id="CX9-Ka-awj"/>
-                            <constraint firstItem="7WM-4V-IU7" firstAttribute="leading" secondItem="2X2-Rg-ab2" secondAttribute="leading" id="QEU-3k-QZp"/>
+                            <constraint firstItem="phO-yB-ab3" firstAttribute="leading" secondItem="rNR-MD-mdM" secondAttribute="leading" id="Okj-kb-lZK"/>
+                            <constraint firstItem="phO-yB-ab3" firstAttribute="top" secondItem="pC9-Oc-L7j" secondAttribute="bottom" constant="32" id="SD9-JC-6kD"/>
                             <constraint firstItem="2X2-Rg-ab2" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="25" id="Sqg-8t-sUm"/>
                             <constraint firstItem="pC9-Oc-L7j" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Vxp-Sh-snC"/>
-                            <constraint firstItem="2X2-Rg-ab2" firstAttribute="top" secondItem="7WM-4V-IU7" secondAttribute="bottom" constant="32" id="Yhp-fh-OiB"/>
-                            <constraint firstItem="7WM-4V-IU7" firstAttribute="top" secondItem="pC9-Oc-L7j" secondAttribute="bottom" constant="40" id="Yr0-Pe-i0C"/>
+                            <constraint firstItem="Fik-8e-Xb5" firstAttribute="centerY" secondItem="phO-yB-ab3" secondAttribute="centerY" id="Wid-OY-Uom"/>
+                            <constraint firstItem="2X2-Rg-ab2" firstAttribute="top" secondItem="phO-yB-ab3" secondAttribute="bottom" constant="40" id="csg-jw-n0W"/>
+                            <constraint firstItem="Fik-8e-Xb5" firstAttribute="leading" secondItem="phO-yB-ab3" secondAttribute="trailing" constant="8" id="iUU-4S-Ujp"/>
+                            <constraint firstItem="Fik-8e-Xb5" firstAttribute="trailing" secondItem="8q7-Bx-k1X" secondAttribute="trailing" id="lBi-f4-dZr"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Video Room" id="jgL-bR-VUH"/>

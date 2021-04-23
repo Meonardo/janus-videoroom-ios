@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ReplayKit
 
 class ViewController: UIViewController {
 
@@ -20,6 +21,15 @@ class ViewController: UIViewController {
     private var roomManager: JanusRoomManager {
         JanusRoomManager.shared
     }
+    
+    private lazy var broadcastPicker: RPSystemBroadcastPickerView = {
+        let pick = RPSystemBroadcastPickerView(frame: CGRect(x: -100, y: -100, width: 44, height: 44))
+        pick.preferredExtension = Config.broadcastBundleIdentifier
+        view.addSubview(pick)
+        return pick
+    }()
+    
+    private var isSharingScreen: Bool = false
     
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -58,12 +68,15 @@ extension ViewController {
             websocketStatusLabel.text = "Connected"
             websocketStatusLabel.textColor = UIColor.systemGreen
         case .cancelled:
+            ProgressHUD.dismiss()
             websocketStatusLabel.text = "Cancelled"
             websocketStatusLabel.textColor = UIColor.systemOrange
         case .disconnected(let reason, let code):
+            ProgressHUD.dismiss()
             websocketStatusLabel.text = "Disconnected with: \(reason), code: \(code)"
             websocketStatusLabel.textColor = UIColor.systemOrange
         case .error(let err):
+            ProgressHUD.dismiss()
             websocketStatusLabel.text = "Error \(err?.localizedDescription ?? "No Reason")"
             websocketStatusLabel.textColor = UIColor.systemRed
         }
@@ -76,10 +89,6 @@ extension ViewController {
         if isDestroy {
             joinButton.isEnabled = true
         } else {
-            /// Save for next launch
-            userDefault?.setValue(textField.text, forKey: Config.lastJoinedRoomKey)
-            
-            joinButton.isEnabled = false
             let video = VideoRoomViewController.showVideo()
             video.modalPresentationStyle = .currentContext
             present(video, animated: true, completion: nil)
@@ -95,15 +104,28 @@ extension ViewController {
             ProgressHUD.showError("Room Number Must be an Integer")
             return
         }
-        sender.isEnabled = false
-        ProgressHUD.show()
+        /// Save for next launch
+        userDefault?.setValue(textField.text, forKey: Config.lastJoinedRoomKey)
         
-        roomManager.createRoom(room: roomID)
+        if segmentControl.selectedSegmentIndex == 1 {
+            sendActionForBroadcastPicker()
+        } else {
+            ProgressHUD.show()
+            roomManager.createRoom(room: roomID)
+        }
     }
     
     @IBAction func segmentAction(_ sender: UISegmentedControl) {
         /// index = 0, Share Camera Content, index = 1, Share Screen Content
-        print(sender.selectedSegmentIndex)
+        let index = sender.selectedSegmentIndex
+        let titles = ["Camera", "Screen"]
+        ProgressHUD.showSuccess(titles[index], image: sender.imageForSegment(at: index)?.withTintColor(.white, renderingMode: .alwaysOriginal))
+    }
+    
+    private func sendActionForBroadcastPicker() {
+        broadcastPicker.subviews.compactMap({ $0 as? UIButton }).forEach { (button) in
+            button.sendActions(for: .allEvents)
+        }
     }
 }
 

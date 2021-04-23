@@ -24,6 +24,7 @@ class SampleHandler: RPBroadcastSampleHandler {
     }
     
     override func broadcastPaused() {
+        
         // User has requested to pause the broadcast. Samples will stop being delivered.
     }
     
