@@ -47,7 +47,13 @@ final class JanusRoomManager {
     var signalingClient: SignalingClient
     
 	/// 是否为屏幕分享
-	var isBroadcast: Bool = false
+    var isBroadcast: Bool = false {
+        didSet {
+            if isBroadcast {
+                roomDisplayName = UIDevice.current.name + "-Screen"
+            }
+        }
+    }
 	
 	private init() {
         signalingClient = SignalingClient(url: Config.signalingServerURL)

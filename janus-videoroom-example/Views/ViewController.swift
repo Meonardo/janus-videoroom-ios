@@ -29,7 +29,7 @@ class ViewController: UIViewController {
         return pick
     }()
     
-    private var isSharingScreen: Bool = false
+    private var isSharingScreen: Bool = UIScreen.main.isCaptured
     
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -53,11 +53,16 @@ extension ViewController {
         textField.text = userDefault?.string(forKey: Config.lastJoinedRoomKey)
         
         roomManager.connect()
+        
+        if isSharingScreen {
+            segmentControl.selectedSegmentIndex = 1
+        }
     }
     
     private func addNotificationObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(signalingStateChange(_:)), name: JanusRoomManager.signalingStateChangeNote, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(roomStateChange(_:)), name: JanusRoomManager.roomStateChangeNote, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(capturedDidChange(_:)), name: UIScreen.capturedDidChangeNotification, object: nil)
     }
     
     @objc private func signalingStateChange(_ sender: Notification) {
@@ -92,6 +97,14 @@ extension ViewController {
             let video = VideoRoomViewController.showVideo()
             video.modalPresentationStyle = .currentContext
             present(video, animated: true, completion: nil)
+        }
+    }
+    
+    @objc private func capturedDidChange(_ sender: Notification) {
+        if UIScreen.main.isCaptured {
+            segmentControl.selectedSegmentIndex = 1
+        } else {
+            segmentControl.selectedSegmentIndex = 0
         }
     }
 }

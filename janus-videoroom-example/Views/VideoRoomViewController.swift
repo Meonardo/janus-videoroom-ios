@@ -193,11 +193,11 @@ extension VideoRoomViewController {
 	}
     
 	@IBAction private func startScreenSharing(_ sender: UIButton) {
-		screenSharingPlaceholder.isHidden = false
+//		screenSharingPlaceholder.isHidden = false
 	}
 	
 	@IBAction private func stopScreenSharing(_ sender: UIButton) {
-		screenSharingPlaceholder.isHidden = true
+//		screenSharingPlaceholder.isHidden = true
 	}
 	
     @objc private func roomStateDidChange(_ sender: Notification) {
