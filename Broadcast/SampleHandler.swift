@@ -14,13 +14,29 @@ class SampleHandler: RPBroadcastSampleHandler {
     private var roomManger = JanusRoomManager.shared
     private let userDefault = UserDefaults(suiteName: Config.sharedGroupName)
     
-    private var capturer: RTCExternalSampleCapturer?
+    private var capturer: ScreenSampleCapturer?
+    
+    private let containerAppURL = URL(string: "videoroom://open.action/vr?f=broadcast")!
+    
+    private var appContext: NSExtensionContext?
     
     override func broadcastStarted(withSetupInfo setupInfo: [String : NSObject]?) {
         // User has requested to start the broadcast. Setup info from the UI extension can be supplied but optional.
 		roomManger.isBroadcast = true
         addNotificationObserver()
         roomManger.connect()
+        
+        openContainerApp()
+    }
+    
+    override func broadcastAnnotated(withApplicationInfo applicationInfo: [AnyHashable : Any]) {
+        super.broadcastAnnotated(withApplicationInfo: applicationInfo)
+        print(applicationInfo)
+    }
+    
+    override func beginRequest(with context: NSExtensionContext) {
+        super.beginRequest(with: context)
+        self.appContext = context
     }
     
     override func broadcastPaused() {
@@ -42,7 +58,7 @@ class SampleHandler: RPBroadcastSampleHandler {
         switch sampleBufferType {
         case RPSampleBufferType.video:
             // Handle video sample buffer
-            capturer?.didCapture(sampleBuffer)
+            capturer?.didCaptureVideo(sampleBuffer: sampleBuffer)
             break
         case RPSampleBufferType.audioApp:
             // Handle audio sample buffer for app audio
@@ -80,7 +96,16 @@ extension SampleHandler {
     }
     
     @objc private func sampleBufferCapturerDidCreate(_ sender: Notification) {
-        guard let capturer = sender.object as? RTCExternalSampleCapturer else { return }
+        guard let capturer = sender.object as? ScreenSampleCapturer else { return }
         self.capturer = capturer
+    }
+    
+    private func openContainerApp() {
+        DispatchQueue.main.async {
+            guard let application = UIApplication.value(forKeyPath: "sharedApplication") as? UIApplication else { return }
+            let selector = NSSelectorFromString("openURL:")
+            application.perform(selector, with: self.containerAppURL)
+        }
+
     }
 }

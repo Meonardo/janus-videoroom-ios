@@ -16,11 +16,11 @@ enum SignalingConnectionState {
 	case cancelled
 }
 
-protocol SignalingClientConnectionDelegate: class {
+protocol SignalingClientConnectionDelegate: AnyObject {
     func signalingClient(didChangeState state: SignalingConnectionState)
 }
 
-protocol JanusResponseHandler: class {
+protocol JanusResponseHandler: AnyObject {
 	func janusHandler(received remoteSdp: RTCSessionDescription, handleID: Int64)
 	func janusHandler(received candidate: RTCIceCandidate)
 	func janusHandler(attachedSelf handleID: Int64)

@@ -8,15 +8,15 @@
 import UIKit
 import WebRTC
 
-protocol WebRTCClientDelegate: class {
+protocol WebRTCClientDelegate: AnyObject {
 	func webRTCClient(_ client: WebRTCClient, didDiscoverLocalCandidate candidate: RTCIceCandidate)
 	func webRTCClient(_ client: WebRTCClient, didChangeConnectionState state: RTCIceConnectionState)
 	func webRTCClient(_ client: WebRTCClient, didAdd stream: RTCMediaStream)
-	func webRTCClient(_ client: WebRTCClient, didCreate externalSampleCapturer: RTCExternalSampleCapturer?)
+	func webRTCClient(_ client: WebRTCClient, didCreate externalSampleCapturer: ScreenSampleCapturer?)
 }
 
 extension WebRTCClientDelegate {
-    func webRTCClient(_ client: WebRTCClient, didCreate externalSampleCapturer: RTCExternalSampleCapturer?) {}
+    func webRTCClient(_ client: WebRTCClient, didCreate externalSampleCapturer: ScreenSampleCapturer?) {}
 }
 
 final class WebRTCClient: NSObject {
@@ -124,7 +124,7 @@ extension WebRTCClient {
 		let videoSource = WebRTCClient.factory.videoSource()
     
         #if TARGET_IS_EXTENSION
-        let videoCapturer = RTCExternalSampleCapturer(delegate: videoSource)
+        let videoCapturer = ScreenSampleCapturer(delegate: videoSource)
         self.videoCapturer = videoCapturer
         delegate?.webRTCClient(self, didCreate: videoCapturer)
         #else

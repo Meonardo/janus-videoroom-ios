@@ -231,7 +231,7 @@ extension JanusRoomManager: WebRTCClientDelegate {
         
     }
     
-    func webRTCClient(_ client: WebRTCClient, didCreate externalSampleCapturer: RTCExternalSampleCapturer?) {
+    func webRTCClient(_ client: WebRTCClient, didCreate externalSampleCapturer: ScreenSampleCapturer?) {
         NotificationCenter.default.post(name: Self.externalSampleCapturerDidCreateNote, object: externalSampleCapturer)
     }
 }
