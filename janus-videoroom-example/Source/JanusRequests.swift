@@ -136,11 +136,11 @@ class JanusPublisher: Codable, CustomDebugStringConvertible {
 	
 	var id: Int64
 	var display: String
-	var videoCodec: String
+	var videoCodec: String?
 	var audioCodec: String?
 	
 	required init(from decoder: Decoder) throws {
-		videoCodec = try decoder.decode("video_codec")
+		videoCodec = try? decoder.decode("video_codec")
 		audioCodec = try? decoder.decode("audio_codec")
 		id = try decoder.decode("id")
 		display = try decoder.decode("display")
@@ -148,16 +148,16 @@ class JanusPublisher: Codable, CustomDebugStringConvertible {
 	
 	init?(dict: [String: Any]) {
 		guard let id = dict["id"] as? Int64,
-			  let display = dict["display"] as? String,
-			  let videoCodec = dict["video_codec"] as? String else { return nil }
-		self.videoCodec = videoCodec
+			  let display = dict["display"] as? String else { return nil }
+        
+		self.videoCodec = dict["video_codec"] as? String
 		self.audioCodec = dict["audio_codec"] as? String
 		self.display = display
 		self.id = id
 	}
 	
 	var description: String {
-		"\(display): a-\(audioCodec ?? "null"), v-\(videoCodec)"
+		"\(display): a-\(audioCodec ?? "null"), v-\(videoCodec ?? "null")"
 	}
 	
 	var debugDescription: String {

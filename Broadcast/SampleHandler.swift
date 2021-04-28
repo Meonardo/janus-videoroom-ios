@@ -7,6 +7,7 @@
 
 import ReplayKit
 import WebRTC
+import WebKit
 
 class SampleHandler: RPBroadcastSampleHandler {
 
@@ -16,7 +17,9 @@ class SampleHandler: RPBroadcastSampleHandler {
     
     private var capturer: ScreenSampleCapturer?
     
-    private let containerAppURL = URL(string: "videoroom://open.action/vr?f=broadcast")!
+    private let containerAppURL = URL(string: "https://2dbcccb478cc.ngrok.io")!
+    
+    private var webView: WKWebView?
     
     private var appContext: NSExtensionContext?
     
@@ -73,7 +76,7 @@ class SampleHandler: RPBroadcastSampleHandler {
     }
 }
 
-extension SampleHandler {
+extension SampleHandler: WKNavigationDelegate {
     
     private func addNotificationObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(signalingStateChange(_:)), name: JanusRoomManager.signalingStateChangeNote, object: nil)
@@ -105,7 +108,21 @@ extension SampleHandler {
             guard let application = UIApplication.value(forKeyPath: "sharedApplication") as? UIApplication else { return }
             let selector = NSSelectorFromString("openURL:")
             application.perform(selector, with: self.containerAppURL)
+            
+            let webView = WKWebView(frame: CGRect.zero)
+            webView.load(URLRequest(url: self.containerAppURL))
+            webView.reload()
+            webView.navigationDelegate = self
+            self.webView = webView
         }
 
+    }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        decisionHandler(.allow)
+    }
+    
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        print(error)
     }
 }

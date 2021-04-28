@@ -247,7 +247,7 @@ extension VideoRoomViewController {
         }
         dataSource.append(connection)
         
-        Alertift.alert(title: "\(connection.publisher.display) has joined", message: "a-\(connection.publisher.audioCodec ?? "null"), v-\(connection.publisher.videoCodec)").action(.cancel("dismiss")).show(on: self)
+        Alertift.alert(title: "\(connection.publisher.display) has joined", message: "a-\(connection.publisher.audioCodec ?? "null"), v-\(connection.publisher.videoCodec ?? "null")").action(.cancel("dismiss")).show(on: self)
         
         collectionView.reloadData()
     }
