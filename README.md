@@ -5,7 +5,7 @@ An iOS example project for janus videoroom-plugin, written in Swift.
 
 - 1 to many video conference;
 - camera sharing;
-- screen sharing(under developing).
+- screen sharing(currently video only).
 
 ## Screenshots
 
