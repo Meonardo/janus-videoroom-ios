@@ -27,6 +27,15 @@
           "revision": "f73c6add3f7694e2e5f27bc6efb889759bb4e9a9",
           "version": "90.0.0"
         }
+      },
+      {
+        "package": "Wormhole",
+        "repositoryURL": "https://github.com/vencewill/Wormhole.git",
+        "state": {
+          "branch": null,
+          "revision": "783433b4271222424e5e43e8cf3a0398b0195d9c",
+          "version": "0.1.0"
+        }
       }
     ]
   },

@@ -7,6 +7,7 @@
 
 import UIKit
 import ReplayKit
+import Alertift
 
 class ViewController: UIViewController {
 
@@ -21,6 +22,10 @@ class ViewController: UIViewController {
     private var roomManager: JanusRoomManager {
         JanusRoomManager.shared
     }
+    
+    private lazy var sessionManager: WormholeSessionManager = {
+        WormholeSessionManager(indentifier: Config.mainAppBundleIdentifier, pathsToRegister: [])
+    }()
     
     private lazy var broadcastPicker: RPSystemBroadcastPickerView = {
         let pick = RPSystemBroadcastPickerView(frame: CGRect(x: -100, y: -100, width: 44, height: 44))
@@ -56,6 +61,13 @@ extension ViewController {
         
         if isSharingScreen {
             segmentControl.selectedSegmentIndex = 1
+        }
+        
+        sessionManager.send(message: 1, to: WormholeMessages.captureStateDidChange) { response in
+            let newState = response.data?.open(as: BroadcastCapturingState.self) ?? .default
+            DispatchQueue.main.async {
+                Alertift.alert(title: "New Capture State", message: "\(newState)").action(.cancel("Dismiss")).show()
+            }
         }
     }
     

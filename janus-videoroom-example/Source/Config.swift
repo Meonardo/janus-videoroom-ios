@@ -7,9 +7,13 @@
 
 import Foundation
 
+enum BroadcastState: Int, Codable {
+    case `default`, running, paused, resumed, finished
+}
+
 struct Config {
     /// Janus Official Demo Signaling Server Address: wss://janus.conf.meetecho.com/ws
-    static let signalingServerURL = URL(string: "ws://192.168.5.99:8188")!
+    static let signalingServerURL = URL(string: "ws://192.168.6.24:8188")!
     
     static let webRTCIceServers: [String] = [
         "stun:stun.l.google.com:19302",
@@ -22,4 +26,8 @@ struct Config {
     static let sharedGroupName = "group.amdox.janus.videoroom"
     static let lastJoinedRoomKey = "kLastJoinedRoomKey"
 	static let broadcastBundleIdentifier = "com.meonardo.janus.videoroom.Broadcast"
+    static let mainAppBundleIdentifier = "com.meonardo.janus.videoroom"
+    
+    
+    static let wormholeContainer = "kWormholeContainer"
 }

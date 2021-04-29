@@ -7,7 +7,7 @@
 
 import ReplayKit
 import WebRTC
-import WebKit
+import Wormhole
 
 class SampleHandler: RPBroadcastSampleHandler {
 
@@ -19,12 +19,14 @@ class SampleHandler: RPBroadcastSampleHandler {
     
     private let containerAppURL = URL(string: "https://2dbcccb478cc.ngrok.io")!
     
-    private var webView: WKWebView?
-    
-    private var appContext: NSExtensionContext?
+    private lazy var sessionManager: WormholeSessionManager = {
+        WormholeSessionManager(indentifier: Config.broadcastBundleIdentifier, pathsToRegister: [WormholeMessages.captureStateDidChange, WormholeMessages.stopCapturing])
+    }()
     
     override func broadcastStarted(withSetupInfo setupInfo: [String : NSObject]?) {
         // User has requested to start the broadcast. Setup info from the UI extension can be supplied but optional.
+        capturingStateDidChange(.running)
+        
 		roomManger.isBroadcast = true
         addNotificationObserver()
         roomManger.connect()
@@ -37,22 +39,20 @@ class SampleHandler: RPBroadcastSampleHandler {
         print(applicationInfo)
     }
     
-    override func beginRequest(with context: NSExtensionContext) {
-        super.beginRequest(with: context)
-        self.appContext = context
-    }
-    
     override func broadcastPaused() {
-        
         // User has requested to pause the broadcast. Samples will stop being delivered.
+        capturingStateDidChange(.paused)
     }
     
     override func broadcastResumed() {
         // User has requested to resume the broadcast. Samples delivery will resume.
+        capturingStateDidChange(.running)
     }
     
     override func broadcastFinished() {
         // User has requested to finish the broadcast.
+        capturingStateDidChange(.finished)
+        
         roomManger.reset()
         roomManger.disconnect()
     }
@@ -76,7 +76,21 @@ class SampleHandler: RPBroadcastSampleHandler {
     }
 }
 
-extension SampleHandler: WKNavigationDelegate {
+extension SampleHandler {
+    
+    private func capturingStateDidChange(_ state: BroadcastCapturingState) {
+        let response = WormholeResponseMessage(data: CodableBox(state))
+        sessionManager.post(message: response, to: WormholeMessages.captureStateDidChange) { request, result in
+            /// Don't need to handle request data, just return state value.
+            response.success = true
+            response.code = 1
+            result(response)
+        }
+    }
+   
+}
+
+extension SampleHandler {
     
     private func addNotificationObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(signalingStateChange(_:)), name: JanusRoomManager.signalingStateChangeNote, object: nil)
@@ -109,20 +123,12 @@ extension SampleHandler: WKNavigationDelegate {
             let selector = NSSelectorFromString("openURL:")
             application.perform(selector, with: self.containerAppURL)
             
-            let webView = WKWebView(frame: CGRect.zero)
-            webView.load(URLRequest(url: self.containerAppURL))
-            webView.reload()
-            webView.navigationDelegate = self
-            self.webView = webView
+//            let webView = WKWebView(frame: CGRect.zero)
+//            webView.load(URLRequest(url: self.containerAppURL))
+//            webView.reload()
+//            webView.navigationDelegate = self
+//            self.webView = webView
         }
 
-    }
-    
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        decisionHandler(.allow)
-    }
-    
-    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        print(error)
     }
 }
