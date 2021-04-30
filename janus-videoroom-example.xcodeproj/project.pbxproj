@@ -23,8 +23,6 @@
 		A053DC15262EF92000672386 /* JanusRoomManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC14262EF92000672386 /* JanusRoomManager.swift */; };
 		A053DC19262EF95B00672386 /* Codextended.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC18262EF95B00672386 /* Codextended.swift */; };
 		A053DC20262EFA4100672386 /* RTCStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC1D262EFA4100672386 /* RTCStates.swift */; };
-		FB045D40263A39FA008A8EB6 /* Wormhole in Frameworks */ = {isa = PBXBuildFile; productRef = FB045D3F263A39FA008A8EB6 /* Wormhole */; };
-		FB045D42263A3A0F008A8EB6 /* Wormhole in Frameworks */ = {isa = PBXBuildFile; productRef = FB045D41263A3A0F008A8EB6 /* Wormhole */; };
 		FB045D44263A5186008A8EB6 /* WormholeMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB045D43263A5186008A8EB6 /* WormholeMessages.swift */; };
 		FB045D45263A519B008A8EB6 /* WormholeMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB045D43263A5186008A8EB6 /* WormholeMessages.swift */; };
 		FB16827B26311B5A00641C9A /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB16827A26311B5A00641C9A /* ReplayKit.framework */; };
@@ -42,6 +40,8 @@
 		FB481357263164510010E58E /* WebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = FB481356263164510010E58E /* WebRTC */; };
 		FB97AB41262FC74D00573B3B /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB97AB40262FC74D00573B3B /* ProgressHUD.swift */; };
 		FB97AB44262FD4AF00573B3B /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB97AB43262FD4AF00573B3B /* Config.swift */; };
+		FBA88085263C05510019A4FF /* Wormhole in Frameworks */ = {isa = PBXBuildFile; productRef = FBA88084263C05510019A4FF /* Wormhole */; };
+		FBA88087263C055B0019A4FF /* Wormhole in Frameworks */ = {isa = PBXBuildFile; productRef = FBA88086263C055B0019A4FF /* Wormhole */; };
 		FBAC1FAF2637FB97007C2AFD /* ScreenSampleCapturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAC1FAE2637FB97007C2AFD /* ScreenSampleCapturer.swift */; };
 		FBAC1FB02637FBB3007C2AFD /* ScreenSampleCapturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAC1FAE2637FB97007C2AFD /* ScreenSampleCapturer.swift */; };
 		FBEAC105262FB0CA008CDC23 /* VideoRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEAC104262FB0CA008CDC23 /* VideoRoomViewController.swift */; };
@@ -109,7 +109,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A053DBFC262EF49B00672386 /* Starscream in Frameworks */,
-				FB045D40263A39FA008A8EB6 /* Wormhole in Frameworks */,
+				FBA88085263C05510019A4FF /* Wormhole in Frameworks */,
 				A053DC04262EF59E00672386 /* WebRTC in Frameworks */,
 				A053DC00262EF4F400672386 /* Alertift in Frameworks */,
 			);
@@ -120,7 +120,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB16827B26311B5A00641C9A /* ReplayKit.framework in Frameworks */,
-				FB045D42263A3A0F008A8EB6 /* Wormhole in Frameworks */,
+				FBA88087263C055B0019A4FF /* Wormhole in Frameworks */,
 				FB481357263164510010E58E /* WebRTC in Frameworks */,
 				FB4813552631644E0010E58E /* Starscream in Frameworks */,
 			);
@@ -241,7 +241,7 @@
 				A053DBFB262EF49B00672386 /* Starscream */,
 				A053DBFF262EF4F400672386 /* Alertift */,
 				A053DC03262EF59E00672386 /* WebRTC */,
-				FB045D3F263A39FA008A8EB6 /* Wormhole */,
+				FBA88084263C05510019A4FF /* Wormhole */,
 			);
 			productName = "janus-videoroom-example";
 			productReference = A053DBE2262EF24500672386 /* janus-videoroom-example.app */;
@@ -263,7 +263,7 @@
 			packageProductDependencies = (
 				FB4813542631644E0010E58E /* Starscream */,
 				FB481356263164510010E58E /* WebRTC */,
-				FB045D41263A3A0F008A8EB6 /* Wormhole */,
+				FBA88086263C055B0019A4FF /* Wormhole */,
 			);
 			productName = Broadcast;
 			productReference = FB16827826311B5A00641C9A /* Broadcast.appex */;
@@ -301,7 +301,7 @@
 				A053DBFA262EF49B00672386 /* XCRemoteSwiftPackageReference "Starscream" */,
 				A053DBFE262EF4F400672386 /* XCRemoteSwiftPackageReference "Alertift" */,
 				A053DC02262EF59E00672386 /* XCRemoteSwiftPackageReference "WebRTC" */,
-				FB045D3E263A39FA008A8EB6 /* XCRemoteSwiftPackageReference "Wormhole" */,
+				FBA88083263C05510019A4FF /* XCRemoteSwiftPackageReference "Wormhole" */,
 			);
 			productRefGroup = A053DBE3262EF24500672386 /* Products */;
 			projectDirPath = "";
@@ -686,9 +686,9 @@
 				minimumVersion = 90.0.0;
 			};
 		};
-		FB045D3E263A39FA008A8EB6 /* XCRemoteSwiftPackageReference "Wormhole" */ = {
+		FBA88083263C05510019A4FF /* XCRemoteSwiftPackageReference "Wormhole" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/vencewill/Wormhole.git";
+			repositoryURL = "https://github.com/Meonardo/Wormhole.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.1.0;
@@ -712,16 +712,6 @@
 			package = A053DC02262EF59E00672386 /* XCRemoteSwiftPackageReference "WebRTC" */;
 			productName = WebRTC;
 		};
-		FB045D3F263A39FA008A8EB6 /* Wormhole */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FB045D3E263A39FA008A8EB6 /* XCRemoteSwiftPackageReference "Wormhole" */;
-			productName = Wormhole;
-		};
-		FB045D41263A3A0F008A8EB6 /* Wormhole */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FB045D3E263A39FA008A8EB6 /* XCRemoteSwiftPackageReference "Wormhole" */;
-			productName = Wormhole;
-		};
 		FB4813542631644E0010E58E /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A053DBFA262EF49B00672386 /* XCRemoteSwiftPackageReference "Starscream" */;
@@ -731,6 +721,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A053DC02262EF59E00672386 /* XCRemoteSwiftPackageReference "WebRTC" */;
 			productName = WebRTC;
+		};
+		FBA88084263C05510019A4FF /* Wormhole */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FBA88083263C05510019A4FF /* XCRemoteSwiftPackageReference "Wormhole" */;
+			productName = Wormhole;
+		};
+		FBA88086263C055B0019A4FF /* Wormhole */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FBA88083263C05510019A4FF /* XCRemoteSwiftPackageReference "Wormhole" */;
+			productName = Wormhole;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

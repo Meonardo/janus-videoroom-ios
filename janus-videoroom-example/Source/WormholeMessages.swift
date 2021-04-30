@@ -54,7 +54,7 @@ class WormholeSessionManager {
         id = indentifier
         wormhole = Wormhole(appGroup: Config.sharedGroupName, container: WormholeMessages.container, transitingType: .file)
         
-//        registerListener(paths: pathsToRegister)
+        registerListener(paths: pathsToRegister)
     }
     
     private func registerListener(paths: [String]) {
@@ -79,7 +79,7 @@ class WormholeSessionManager {
     //MARK: - Client
     
     func send<T: Codable>(message: T, to path: String, response: WormholeResponse?) {
-//        wormhole.passMessage(message, with: path)
+        wormhole.passMessage(message, with: path)
         wormhole.listenForMessage(with: path) { box in
             guard let box = box?.open(as: WormholeResponseMessage.self) else {
                 response?(WormholeResponseMessage.empty)

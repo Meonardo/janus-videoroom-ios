@@ -82,6 +82,9 @@ extension SampleHandler {
         let response = WormholeResponseMessage(data: CodableBox(state))
         sessionManager.post(message: response, to: WormholeMessages.captureStateDidChange) { request, result in
             /// Don't need to handle request data, just return state value.
+            if let value = request as? CodableBox {
+                print(value.open(as: Int.self) ?? "x")
+            }
             response.success = true
             response.code = 1
             result(response)

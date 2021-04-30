@@ -74,7 +74,6 @@ extension ViewController {
     private func addNotificationObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(signalingStateChange(_:)), name: JanusRoomManager.signalingStateChangeNote, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(roomStateChange(_:)), name: JanusRoomManager.roomStateChangeNote, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(capturedDidChange(_:)), name: UIScreen.capturedDidChangeNotification, object: nil)
     }
     
     @objc private func signalingStateChange(_ sender: Notification) {

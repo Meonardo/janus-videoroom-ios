@@ -30,11 +30,11 @@
       },
       {
         "package": "Wormhole",
-        "repositoryURL": "https://github.com/vencewill/Wormhole.git",
+        "repositoryURL": "https://github.com/Meonardo/Wormhole.git",
         "state": {
           "branch": null,
-          "revision": "783433b4271222424e5e43e8cf3a0398b0195d9c",
-          "version": "0.1.0"
+          "revision": "49351aee6dbf17e08f0e0f6e66262996eaa545da",
+          "version": "0.1.1"
         }
       }
     ]
