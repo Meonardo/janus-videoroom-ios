@@ -21,11 +21,11 @@
       },
       {
         "package": "WebRTC",
-        "repositoryURL": "https://github.com/stasel/WebRTC.git",
+        "repositoryURL": "https://github.com/Meonardo/WebRTC.git",
         "state": {
           "branch": null,
-          "revision": "f73c6add3f7694e2e5f27bc6efb889759bb4e9a9",
-          "version": "90.0.0"
+          "revision": "bcaa5c23334874d1cefb6e3aba248fc10a02265e",
+          "version": "90.1.1"
         }
       },
       {

@@ -105,6 +105,7 @@ extension VideoRoomViewController {
 	
     private func configureRenderer() {
         let renderer = RTCMTLVideoView(frame: view.bounds)
+        renderer.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         view.insertSubview(renderer, at: 0)
         renderer.videoContentMode = .scaleAspectFill
 

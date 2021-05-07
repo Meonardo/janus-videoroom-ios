@@ -67,7 +67,7 @@ final class WebRTCClient: NSObject {
 		// Define media constraints. DtlsSrtpKeyAgreement is required to be true to be able to connect with web browsers.
 		let constraints = RTCMediaConstraints(mandatoryConstraints: nil,
 											  optionalConstraints: ["DtlsSrtpKeyAgreement":kRTCMediaConstraintsValueTrue])
-		peerConnection = WebRTCClient.factory.peerConnection(with: config, constraints: constraints, delegate: nil)
+		peerConnection = WebRTCClient.factory.peerConnection(with: config, constraints: constraints, delegate: nil)!
 		
 		identifier = id
         self.delegate = delegate
@@ -174,7 +174,9 @@ extension WebRTCClient {
 	}
 	
 	func set(remoteCandidate: RTCIceCandidate) {
-		peerConnection.add(remoteCandidate)
+        peerConnection.add(remoteCandidate) { error in
+            debugPrint("peerConnection add remoteCandidate failed, Err: \(error?.localizedDescription ?? "no reason")")
+        }
 	}
 }
 
@@ -191,11 +193,14 @@ extension WebRTCClient {
 	
     @available(iOSApplicationExtension, unavailable)
 	func attach(renderer: RTCVideoRenderer, isLocal: Bool) {
-		if isLocal {
-			startCaptureLocalVideo(renderer: renderer)
-		} else {
-			renderRemoteVideo(to: renderer)
-		}
+        guard let view = renderer as? RTCMTLVideoView else { return }
+        if isLocal {
+            view.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+            startCaptureLocalVideo(renderer: renderer)
+        } else {
+            view.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+            renderRemoteVideo(to: renderer)
+        }
 	}
 	
     @available(iOSApplicationExtension, unavailable)
