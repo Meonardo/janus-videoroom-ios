@@ -40,11 +40,12 @@
 		FB97AB44262FD4AF00573B3B /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB97AB43262FD4AF00573B3B /* Config.swift */; };
 		FBA88085263C05510019A4FF /* Wormhole in Frameworks */ = {isa = PBXBuildFile; productRef = FBA88084263C05510019A4FF /* Wormhole */; };
 		FBA88087263C055B0019A4FF /* Wormhole in Frameworks */ = {isa = PBXBuildFile; productRef = FBA88086263C055B0019A4FF /* Wormhole */; };
-		FBAA430926451D9A00B9D1BC /* WebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = FBAA430826451D9A00B9D1BC /* WebRTC */; };
 		FBAC1FAF2637FB97007C2AFD /* ScreenSampleCapturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAC1FAE2637FB97007C2AFD /* ScreenSampleCapturer.swift */; };
 		FBAC1FB02637FBB3007C2AFD /* ScreenSampleCapturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAC1FAE2637FB97007C2AFD /* ScreenSampleCapturer.swift */; };
 		FBEAC105262FB0CA008CDC23 /* VideoRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEAC104262FB0CA008CDC23 /* VideoRoomViewController.swift */; };
 		FBEAC109262FB7B1008CDC23 /* VideoRoomCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEAC108262FB7B1008CDC23 /* VideoRoomCollectionViewCell.swift */; };
+		FBF2341726469AD7002E5DAC /* WebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = FBF2341626469AD7002E5DAC /* WebRTC */; };
+		FBF2341926469ADF002E5DAC /* WebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = FBF2341826469ADF002E5DAC /* WebRTC */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,7 +109,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A053DBFC262EF49B00672386 /* Starscream in Frameworks */,
-				FBAA430926451D9A00B9D1BC /* WebRTC in Frameworks */,
+				FBF2341726469AD7002E5DAC /* WebRTC in Frameworks */,
 				FBA88085263C05510019A4FF /* Wormhole in Frameworks */,
 				A053DC00262EF4F400672386 /* Alertift in Frameworks */,
 			);
@@ -119,6 +120,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB16827B26311B5A00641C9A /* ReplayKit.framework in Frameworks */,
+				FBF2341926469ADF002E5DAC /* WebRTC in Frameworks */,
 				FBA88087263C055B0019A4FF /* Wormhole in Frameworks */,
 				FB4813552631644E0010E58E /* Starscream in Frameworks */,
 			);
@@ -239,7 +241,7 @@
 				A053DBFB262EF49B00672386 /* Starscream */,
 				A053DBFF262EF4F400672386 /* Alertift */,
 				FBA88084263C05510019A4FF /* Wormhole */,
-				FBAA430826451D9A00B9D1BC /* WebRTC */,
+				FBF2341626469AD7002E5DAC /* WebRTC */,
 			);
 			productName = "janus-videoroom-example";
 			productReference = A053DBE2262EF24500672386 /* janus-videoroom-example.app */;
@@ -261,6 +263,7 @@
 			packageProductDependencies = (
 				FB4813542631644E0010E58E /* Starscream */,
 				FBA88086263C055B0019A4FF /* Wormhole */,
+				FBF2341826469ADF002E5DAC /* WebRTC */,
 			);
 			productName = Broadcast;
 			productReference = FB16827826311B5A00641C9A /* Broadcast.appex */;
@@ -298,7 +301,7 @@
 				A053DBFA262EF49B00672386 /* XCRemoteSwiftPackageReference "Starscream" */,
 				A053DBFE262EF4F400672386 /* XCRemoteSwiftPackageReference "Alertift" */,
 				FBA88083263C05510019A4FF /* XCRemoteSwiftPackageReference "Wormhole" */,
-				FBAA430726451D9A00B9D1BC /* XCRemoteSwiftPackageReference "WebRTC" */,
+				FBF2341526469AD7002E5DAC /* XCRemoteSwiftPackageReference "WebRTC" */,
 			);
 			productRefGroup = A053DBE3262EF24500672386 /* Products */;
 			projectDirPath = "";
@@ -683,12 +686,12 @@
 				minimumVersion = 0.1.0;
 			};
 		};
-		FBAA430726451D9A00B9D1BC /* XCRemoteSwiftPackageReference "WebRTC" */ = {
+		FBF2341526469AD7002E5DAC /* XCRemoteSwiftPackageReference "WebRTC" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Meonardo/WebRTC.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 90.1.1;
+				minimumVersion = 90.1.5;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -719,9 +722,14 @@
 			package = FBA88083263C05510019A4FF /* XCRemoteSwiftPackageReference "Wormhole" */;
 			productName = Wormhole;
 		};
-		FBAA430826451D9A00B9D1BC /* WebRTC */ = {
+		FBF2341626469AD7002E5DAC /* WebRTC */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = FBAA430726451D9A00B9D1BC /* XCRemoteSwiftPackageReference "WebRTC" */;
+			package = FBF2341526469AD7002E5DAC /* XCRemoteSwiftPackageReference "WebRTC" */;
+			productName = WebRTC;
+		};
+		FBF2341826469ADF002E5DAC /* WebRTC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FBF2341526469AD7002E5DAC /* XCRemoteSwiftPackageReference "WebRTC" */;
 			productName = WebRTC;
 		};
 /* End XCSwiftPackageProductDependency section */

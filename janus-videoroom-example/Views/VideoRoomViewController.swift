@@ -145,7 +145,16 @@ extension VideoRoomViewController {
     @IBAction private func switchCamera(_ sender: UIButton) {
 		let image = sender.currentImage?.withTintColor(.white).withRenderingMode(.alwaysOriginal)
 		ProgressHUD.showSuccess("Camera Switched", image: image)
-        localRTCClient?.switchCamera()
+        
+        if currentConnection?.isLocal == true {
+            guard let renderer = renderer else { return }
+            localRTCClient?.switchCamera(renderer: renderer)
+        } else {
+            guard let localIndex = dataSource.lastIndex(where: { $0.isLocal }) else { return }
+            guard let cell = collectionView.cellForItem(at: IndexPath(item: localIndex, section: 0)) as? VideoRoomCollectionViewCell else { return }
+            let webRTCClient = dataSource[localIndex].rtcClient
+            webRTCClient?.switchCamera(renderer: cell.renderView)
+        }
     }
     
     @IBAction private func micphoneAction(_ sender: UIButton) {
@@ -217,13 +226,15 @@ extension VideoRoomViewController {
         Alertift.alert(title: "\(connection.publisher.display) has left", message: nil).action(.cancel("dismiss")).show(on: self)
         
         guard let currentConnection = currentConnection, let renderer = renderer else { return }
-        /// 先不考虑自己在视频页面离开 room
+        
         if currentConnection.handleID == handleID {
             
             currentConnection.rtcClient?.detach(renderer: renderer, isLocal: currentConnection.isLocal)
             let last = dataSource.removeLast()
             last.rtcClient?.attach(renderer: renderer, isLocal: last.isLocal)
             collectionView.deleteItems(at: [IndexPath(item: dataSource.count, section: 0)])
+            
+            currentConnection.rtcClient?.destory()
             
             self.currentConnection = last
         } else {

@@ -340,7 +340,9 @@ extension SignalingClient {
 							processSubscribeStarted(data: data)
 						} else if transaction == "Destroy" {
 							destroyRoomFinished()
-						}
+                        } else if transaction == "Unpublish" {
+                            processUnpublish(data: data)
+                        }
 						
 						/// Events
 						if janus == "hangup" {
@@ -437,4 +439,13 @@ extension SignalingClient {
 		
 		responseHandler?.janusHandler(leftRoom: handleID, reason: reason)
 	}
+    
+    private func processUnpublish(data: [String: Any]) {
+        guard let plugindata = data["plugindata"] as? [String: Any],
+              let obj = plugindata["data"] as? [String: Any],
+              let unpublished = obj["unpublished"] as? String else { return }
+        if unpublished == "ok" {
+            responseHandler?.janusHandler(leftRoom: roomManager.handleID, reason: "Unpublish")
+        }
+    }
 }

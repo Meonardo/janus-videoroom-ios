@@ -42,6 +42,8 @@ final class WebRTCClient: NSObject {
 	private var remoteVideoTrack: RTCVideoTrack?
 
 	let maxResolution: Int32 = 720
+    let maxFps = 20
+    
 	var identifier: String
 	var cameraPosition: AVCaptureDevice.Position = .front
 	
@@ -128,7 +130,9 @@ extension WebRTCClient {
         self.videoCapturer = videoCapturer
         delegate?.webRTCClient(self, didCreate: videoCapturer)
         #else
-        videoCapturer = RTCCameraVideoCapturer(delegate: videoSource)
+        let videoCapturer = RTCCameraVideoCapturer(delegate: videoSource)
+        videoCapturer.rotationDelegate = self
+        self.videoCapturer = videoCapturer
         #endif
 		
 		let videoTrack = WebRTCClient.factory.videoTrack(with: videoSource, trackId: "video0")
@@ -144,9 +148,7 @@ extension WebRTCClient {
 											 optionalConstraints: nil)
 		peerConnection.offer(for: constrains) { [weak self] (sdp, error) in
 			guard let self = self else { return }
-			guard let sdp = sdp else {
-				return
-			}
+			guard let sdp = sdp else { return }
 			
 			self.peerConnection.setLocalDescription(sdp, completionHandler: { (error) in
 				completion(sdp)
@@ -159,9 +161,7 @@ extension WebRTCClient {
 											 optionalConstraints: nil)
 		peerConnection.answer(for: constrains) { [weak self] (sdp, error) in
 			guard let self = self else { return }
-			guard let sdp = sdp else {
-				return
-			}
+			guard let sdp = sdp else { return }
 			
 			self.peerConnection.setLocalDescription(sdp, completionHandler: { (error) in
 				completion(sdp)
@@ -175,7 +175,7 @@ extension WebRTCClient {
 	
 	func set(remoteCandidate: RTCIceCandidate) {
         peerConnection.add(remoteCandidate) { error in
-            debugPrint("peerConnection add remoteCandidate failed, Err: \(error?.localizedDescription ?? "no reason")")
+            debugPrint("peerConnection add remoteCandidate failed, Error: \(error?.localizedDescription ?? "!no reason")")
         }
 	}
 }
@@ -193,9 +193,10 @@ extension WebRTCClient {
 	
     @available(iOSApplicationExtension, unavailable)
 	func attach(renderer: RTCVideoRenderer, isLocal: Bool) {
+        /// **Notice**: Use `RTCMTLVideoView` as renderer only.
         guard let view = renderer as? RTCMTLVideoView else { return }
         if isLocal {
-            view.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+            adjustTransformIfNecessary(for: view)
             startCaptureLocalVideo(renderer: renderer)
         } else {
             view.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
@@ -214,17 +215,24 @@ extension WebRTCClient {
 				return width1 <= maxResolution
 			}).last) else { return }
 			
-			guard let fps = (selectedFormat.videoSupportedFrameRateRanges.sorted { return $0.maxFrameRate < $1.maxFrameRate }.last) else { return }
+			guard let fpsRange = (selectedFormat.videoSupportedFrameRateRanges.sorted { return $0.maxFrameRate < $1.maxFrameRate }.last) else { return }
+            let fps = min(Int(fpsRange.maxFrameRate), maxFps)
 			capturer.startCapture(with: camera,
 								  format: selectedFormat,
-								  fps: Int(fps.maxFrameRate))
+                                  fps: fps) { [weak self] error in
+                DispatchQueue.main.async {
+                    if let renderer = renderer as? RTCMTLVideoView {
+                        self?.adjustTransformIfNecessary(for: renderer)
+                    }
+                }
+            }
 			
 			localVideoTrack?.add(renderer)
 		}
 	}
     
     @available(iOSApplicationExtension, unavailable)
-	func switchCamera() {
+    func switchCamera(renderer: RTCVideoRenderer) {
 		guard let capturer = videoCapturer as? RTCCameraVideoCapturer else { return }
 		
 		cameraPosition = cameraPosition == .front ? .back : .front
@@ -236,10 +244,17 @@ extension WebRTCClient {
 				return width1 <= maxResolution
 			}).last) else { return }
 			
-			guard let fps = (selectedFormat.videoSupportedFrameRateRanges.sorted { return $0.maxFrameRate < $1.maxFrameRate }.last) else { return }
+            guard let fpsRange = (selectedFormat.videoSupportedFrameRateRanges.sorted { return $0.maxFrameRate < $1.maxFrameRate }.last) else { return }
+            let fps = min(Int(fpsRange.maxFrameRate), maxFps)
 			capturer.startCapture(with: camera,
 								  format: selectedFormat,
-								  fps: Int(fps.maxFrameRate))
+                                  fps: fps) { [weak self] error in
+                DispatchQueue.main.async {
+                    if let renderer = renderer as? RTCMTLVideoView {
+                        self?.adjustTransformIfNecessary(for: renderer)
+                    }
+                }
+            }
 		}
 	}
 	
@@ -254,6 +269,14 @@ extension WebRTCClient {
 	func removeRemoteVideoRender(from renderer: RTCVideoRenderer) {
 		remoteVideoTrack?.remove(renderer)
 	}
+    
+    private func adjustTransformIfNecessary(for renderer: RTCMTLVideoView) {
+        if cameraPosition == .front {
+            renderer.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        } else {
+            renderer.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+        }
+    }
 }
 
 extension WebRTCClient: RTCPeerConnectionDelegate {
@@ -296,6 +319,14 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
 	func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {
 		debugPrint("peerConnection did open data channel")
 	}
+}
+
+@available(iOSApplicationExtension, unavailable)
+extension WebRTCClient: RTCVideoCapturerOrientationDelegate {
+    
+    func rotationForCameraVideoCapturer() -> RTCVideoRotation {
+        RTCVideoRotation._90
+    }
 }
 
 extension WebRTCClient {

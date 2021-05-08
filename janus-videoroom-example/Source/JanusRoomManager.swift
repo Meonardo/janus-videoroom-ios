@@ -119,7 +119,7 @@ extension JanusRoomManager {
     }
     
     func unpubish() {
-        
+        signalingClient.unpublish()
     }
     
     func republish() {
@@ -191,18 +191,19 @@ extension JanusRoomManager: JanusResponseHandler {
 	
 	func janusHandler(leftRoom handleID: Int64, reason: String?) {
 		if handleID == self.handleID {
-			/// 不处理本机 unpublish 事件
-			return
-		}
-		let targetConnection = connection(for: handleID)
-		/// Post Notification
-		NotificationCenter.default.post(name: Self.publisherDidLeaveRoomNote, object: targetConnection, userInfo: nil)
-		
-		/// Update Publishers
-		let removedPublisherID = targetConnection?.publisher.id
-		currentRoom?.publishers.removeAll(where: { $0.id == removedPublisherID })
-		/// Update Connections
-		connections.removeAll(where: { $0.handleID == handleID })
+            /// Post Notification
+            NotificationCenter.default.post(name: Self.publisherDidLeaveRoomNote, object: localConnection, userInfo: nil)
+        } else {
+            let targetConnection = connection(for: handleID)
+            /// Post Notification
+            NotificationCenter.default.post(name: Self.publisherDidLeaveRoomNote, object: targetConnection, userInfo: nil)
+            
+            /// Update Publishers
+            let removedPublisherID = targetConnection?.publisher.id
+            currentRoom?.publishers.removeAll(where: { $0.id == removedPublisherID })
+        }
+        /// Update Connections
+        connections.removeAll(where: { $0.handleID == handleID })
 	}
 	
 	func janusHandler(didAttach publisher: JanusPublisher, handleID: Int64) {
