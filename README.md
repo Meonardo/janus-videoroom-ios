@@ -28,7 +28,7 @@ for example: `wss://janus.conf.meetecho.com/ws` or build your own janus sever.
 - Uploading...
 
 ## External Libraries & their licenses
-- [WebRTC](https://github.com/stasel/WebRTC).
+- [WebRTC](https://github.com/Meonardo/WebRTC.git).
 - [Starscream](https://github.com/daltoniam/Starscream).
 - [Codextended](https://github.com/JohnSundell/Codextended). 
 - [Alertift](https://github.com/sgr-ksmt/Alertift).
