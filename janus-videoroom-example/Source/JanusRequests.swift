@@ -7,7 +7,7 @@
 
 import WebRTC
 
-struct JanusCreateRoom: Codable {
+struct JanusCreateRoomSession: Codable {
 	var janus = "create"
 	var transaction = "Create"
 	var room: Int
@@ -174,11 +174,11 @@ class JanusPublisher: Codable, CustomDebugStringConvertible {
 
 class JanusJoinedRoom: Codable, CustomDebugStringConvertible {
 	
-	var id: Int64
+	var id: Int64 = 1
 	var room: Int
-	var name: String
-	var privateID: Int64
-	var publishers: [JanusPublisher]
+	var name: String = "Demo Room"
+	var privateID: Int64 = 0
+	var publishers: [JanusPublisher] = []
 	
 	required init(from decoder: Decoder) throws {
 		publishers = try decoder.decode(keyPath: "plugindata.data.publishers")
@@ -195,6 +195,16 @@ class JanusJoinedRoom: Codable, CustomDebugStringConvertible {
 	var debugDescription: String {
 		name + ": \(id)"
 	}
+    
+    init?(data: [String: Any]) {
+        guard let room = data["room"] as? Int else { return nil }
+        
+        self.room = room
+        self.name = data["display"] as? String ?? ""
+        
+        guard let participants = data["participants"] as? [[String: Any]] else { return }
+        publishers = participants.filter({ ($0["publisher"] as? Bool) == true }).compactMap( { JanusPublisher(dict: $0) })
+    }
 }
 
 //MARK: - Subscriber
@@ -220,7 +230,8 @@ struct JanusSubscribeJoin: Codable {
 		var ptype = "subscriber"
 		var room: Int
 		var feed: Int64
-		var private_id: Int64
+        /// not necessary
+//		var private_id: Int64
 	}
 	
 	var body: Body
@@ -230,7 +241,7 @@ struct JanusSubscribeJoin: Codable {
 	var handle_id: Int64
 	
 	init(room: JanusJoinedRoom, publisher: JanusPublisher, handleID: Int64, sessionID: Int64) {
-		body = Body(room: room.room, feed: publisher.id, private_id: room.privateID)
+		body = Body(room: room.room, feed: publisher.id)
 		handle_id = handleID
 		session_id = sessionID
 	}
@@ -286,3 +297,21 @@ struct JanusSubscribeStart: Codable {
 	}
 }
 
+struct JanusListparticipants: Codable {
+    
+    struct Body: Codable {
+        var request = "listparticipants"
+        var room: Int
+    }
+    var janus = "message"
+    var transaction = "Listparticipants"
+    var session_id: Int64
+    var handle_id: Int64
+    var body: Body
+    
+    init(room: Int, sessionID: Int64, handleID: Int64) {
+        session_id = sessionID
+        handle_id = handleID
+        body = Body(room: room)
+    }
+}

@@ -21,6 +21,10 @@ protocol SignalingClientConnectionDelegate: AnyObject {
 }
 
 protocol JanusResponseHandler: AnyObject {
+    func janusHandler(receivedError reason: String)
+    
+    func janusHandler(didCreateSession sessionID: Int64)
+    
 	func janusHandler(received remoteSdp: RTCSessionDescription, handleID: Int64)
 	func janusHandler(received candidate: RTCIceCandidate)
 	func janusHandler(attachedSelf handleID: Int64)
@@ -96,7 +100,7 @@ extension SignalingClient {
 		if timer != nil {
 			return
 		}
-		let timer = Foundation.Timer(timeInterval: 20, repeats: true) { [weak self] (t) in
+		let timer = Foundation.Timer(timeInterval: 30, repeats: true) { [weak self] (t) in
 			self?.sendHeatbeat()
 		}
 		RunLoop.current.add(timer, forMode: .common)
@@ -116,8 +120,8 @@ extension SignalingClient {
 extension SignalingClient {
 	/// 加入房间
 	/// - Parameter room: 房间号
-	func createRoom(room: Int) {
-		let req = JanusCreateRoom(room: room)
+	func createRoomSession(room: Int) {
+		let req = JanusCreateRoomSession(room: room)
 		do {
 			let msg = try encoder.encode(req)
 			write(data: msg)
@@ -126,8 +130,8 @@ extension SignalingClient {
 		}
 	}
 	
-	/// 离开房间
-	func destroyRoom() {
+	/// Leave 离开房间
+	func leaveRoom() {
 		killTimer()
 		let sessionID = roomManager.sessionID
 		let req = JanusLeaveRoom(session_id: sessionID)
@@ -152,7 +156,6 @@ extension SignalingClient {
 	
 	/// Attach, 作为发布者身份加入房间时获取 handle_id
 	private func sendAttachRequest(id: Int64) {
-		roomManager.sessionID = id
 		let req = JanusAttach(id: id)
 		do {
 			let msg = try encoder.encode(req)
@@ -162,10 +165,8 @@ extension SignalingClient {
 		}
 	}
 	
-	/// 加入房间 as a Publisher
-	private func sendJoinRoomRequest(id: Int64, handleID: Int64) {
-        /// Save local handleID
-		roomManager.handleID = handleID
+	/// 加入房间 As Publisher
+	private func joinRoomAsPublisher(id: Int64, handleID: Int64) {
         let room = roomManager.room
         let display = roomManager.roomDisplayName
         
@@ -182,7 +183,7 @@ extension SignalingClient {
 	func publish() {
 		let handleID = roomManager.handleID
 		let id = roomManager.sessionID
-		sendJoinRoomRequest(id: id, handleID: handleID)
+		joinRoomAsPublisher(id: id, handleID: handleID)
 	}
 	
 	/// 取消发布
@@ -248,6 +249,16 @@ extension SignalingClient {
 			print(error.localizedDescription)
 		}
 	}
+    
+    func listparticipants() {
+        let req = JanusListparticipants(room: roomManager.room, sessionID: roomManager.sessionID, handleID: roomManager.handleID)
+        do {
+            let msg = try encoder.encode(req)
+            write(data: msg)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 }
 
 /// WebSocketDelegate
@@ -301,60 +312,60 @@ extension SignalingClient {
 		do {
 			let obj = try JSONSerialization.jsonObject(with: source, options: [])
 			guard let data = obj as? [String: Any] else { return }
-	
-			if let aData = data["data"] as? [String: Any] {
-				let transaction = data["transaction"] as? String ?? ""
-				if let id = aData["id"] as? Int64 {
-					if transaction == "Create" {
-						/// 创建成功, 获得 session_id
-						sendAttachRequest(id: id)
-					} else if transaction == "Attach" {
-						/// 获得 handle_id
-						responseHandler?.janusHandler(attachedSelf: id)
-						sendJoinRoomRequest(id: roomManager.sessionID, handleID: id)
-					} else if transaction.hasPrefix("Attach.") {
-						/// Attached 成功
-						guard let last = transaction.components(separatedBy: ".").last, let publisherID = Int64(last) else { return }
-						guard let room = roomManager.currentRoom, let publisher = room.publisher(from: publisherID) else { return }
-						///
-						responseHandler?.janusHandler(didAttach: publisher, handleID: id)
-						///
-						sendSubscribeRequest(room: room, publisher: publisher, handleID: id)
-					}
-				}
-			} else {
-				if let janus = data["janus"] as? String {
-					if janus == "error" {
-						guard let error = data["error"] as? [String: Any] else { return }
-						print("error: \(error["reason"] ?? "no reason")")
-					} else {
-						/// success
-						let transaction = data["transaction"] as? String ?? ""
-						if transaction == "JoinRoom" {
-							processJoinedRoom(data: source)
-						} else if transaction == "Configure" {
-							processConfigures(data: data)
-						} else if transaction == "SubscribeJoin" {
-							processOffer(data: data)
-						} else if transaction == "Start" {
-							processSubscribeStarted(data: data)
-						} else if transaction == "Destroy" {
-							destroyRoomFinished()
-                        } else if transaction == "Unpublish" {
-                            processUnpublish(data: data)
+            /// Using transaction to identify message send & receive
+            let transaction = data["transaction"] as? String ?? ""
+            
+            if let janus = data["janus"] as? String {
+                if janus == "error" {
+                    /// Error
+                    guard let error = data["error"] as? [String: Any] else { return }
+                    responseHandler?.janusHandler(receivedError: error["reason"] as? String ?? "no reason")
+                } else if janus == "event" {
+                    /// Events
+                    if transaction == "JoinRoom" {
+                        processJoinedRoom(data: source)
+                    } else if transaction == "Configure" {
+                        processConfigures(data: data)
+                    } else if transaction == "SubscribeJoin" {
+                        processOffer(data: data)
+                    } else if transaction == "Start" {
+                        processSubscribeStarted(data: data)
+                    } else if transaction == "Unpublish" {
+                        processUnpublish(data: data)
+                    } else {
+                        processJoinedPublisher(data: data)
+                    }
+                } else if janus == "hangup" {
+                    processHangup(data: data)
+                } else if janus == "success" {
+                    /// Success
+                    if transaction == "Destroy" {
+                        destroyRoomFinished()
+                    } else if transaction == "Create" || transaction == "Attach" || transaction.hasPrefix("Attach.") {
+                        guard let aData = data["data"] as? [String: Any], let id = aData["id"] as? Int64 else { return }
+                        if transaction == "Create" {
+                            /// Save SessionID
+                            responseHandler?.janusHandler(didCreateSession: id)
+                            /// Attach to Fetch Handle ID
+                            sendAttachRequest(id: id)
+                        } else if transaction == "Attach" {
+                            responseHandler?.janusHandler(attachedSelf: id)
+                            /// Join Room As Publisher
+                            joinRoomAsPublisher(id: roomManager.sessionID, handleID: id)
+                        } else if transaction.hasPrefix("Attach.") {
+                            /// Attached 成功
+                            guard let last = transaction.components(separatedBy: ".").last, let publisherID = Int64(last) else { return }
+                            guard let room = roomManager.currentRoom, let publisher = room.publisher(from: publisherID) else { return }
+                            ///
+                            responseHandler?.janusHandler(didAttach: publisher, handleID: id)
+                            ///
+                            sendSubscribeRequest(room: room, publisher: publisher, handleID: id)
                         }
-						
-						/// Events
-						if janus == "hangup" {
-							processHangup(data: data)
-						}
-						if janus == "event" {
-							processEvents(data: data)
-							processJoinedPublisher(data: data)
-						}
-					}
-				}
-			}
+                    } else if transaction == "Listparticipants" {
+                        processListparticipants(data: data)
+                    }
+                }
+            }
 		} catch {
 			print(error.localizedDescription)
 		}
@@ -370,7 +381,7 @@ extension SignalingClient {
 			/// Send keep-alive cmd
 			configureTimer()
 			
-			if !roomManager.isBroadcast {
+			if !roomManager.isBroadcasting {
 				/// Attach all the active publisher, if NOT broadcast screen.
 				joined.publishers.forEach{( attach(publisher: $0) )}
 			}
@@ -379,6 +390,23 @@ extension SignalingClient {
 		}
 	}
 	
+    private func processListparticipants(data: [String: Any]) {
+        guard let plugindata = data["plugindata"] as? [String: Any], let data = plugindata["data"] as? [String: Any] else { return }
+        
+        guard let joined = JanusJoinedRoom(data: data) else { return }
+        /// Save the room just joined
+        roomManager.currentRoom = joined
+        ///
+        responseHandler?.janusHandler(joinedRoom: roomManager.handleID)
+        /// Send keep-alive cmd
+        configureTimer()
+        
+        if !roomManager.isBroadcasting {
+            /// Attach all the active publisher, if NOT broadcast screen.
+            joined.publishers.forEach{( attach(publisher: $0) )}
+        }
+    }
+    
 	private func processConfigures(data: [String: Any]) {
 		guard let jsep = data["jsep"] as? [String: Any] else { return }
 		guard let sdp = jsep["sdp"] as? String, let type = jsep["type"] as? String else { return }
@@ -399,11 +427,7 @@ extension SignalingClient {
 		let remoteSdp = RTCSessionDescription(type: jsepType, sdp: sdp)
 		responseHandler?.janusHandler(received: remoteSdp, handleID: handleID)
 	}
-	
-	private func processEvents(data: [String: Any]) {
-		
-	}
-	
+
 	private func destroyRoomFinished() {
 		responseHandler?.janusHandlerDidDestroyRoom()
 	}

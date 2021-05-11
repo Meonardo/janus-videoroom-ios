@@ -11,13 +11,10 @@ import Wormhole
 
 class SampleHandler: RPBroadcastSampleHandler {
 
-    private let logging = RTCCallbackLogger()
     private var roomManger = JanusRoomManager.shared
     private let userDefault = UserDefaults(suiteName: Config.sharedGroupName)
     
     private var capturer: ScreenSampleCapturer?
-    
-    private let containerAppURL = URL(string: "https://2dbcccb478cc.ngrok.io")!
     
     private lazy var sessionManager: WormholeSessionManager = {
         WormholeSessionManager(indentifier: Config.broadcastBundleIdentifier, pathsToRegister: [WormholeMessages.captureStateDidChange, WormholeMessages.stopCapturing])
@@ -27,7 +24,7 @@ class SampleHandler: RPBroadcastSampleHandler {
         // User has requested to start the broadcast. Setup info from the UI extension can be supplied but optional.
         capturingStateDidChange(.running)
         
-		roomManger.isBroadcast = true
+		roomManger.isBroadcasting = true
         addNotificationObserver()
         roomManger.connect()
         
@@ -106,7 +103,7 @@ extension SampleHandler {
         
         if case .connected = state {
             guard let lastJoinedRoom = userDefault?.string(forKey: Config.lastJoinedRoomKey), let room = Int(lastJoinedRoom) else { return }
-            roomManger.createRoom(room: room)
+            roomManger.joinRoom(room: room)
         }
     }
     
@@ -122,9 +119,9 @@ extension SampleHandler {
     
     private func openContainerApp() {
         DispatchQueue.main.async {
-            guard let application = UIApplication.value(forKeyPath: "sharedApplication") as? UIApplication else { return }
-            let selector = NSSelectorFromString("openURL:")
-            application.perform(selector, with: self.containerAppURL)
+//            guard let application = UIApplication.value(forKeyPath: "sharedApplication") as? UIApplication else { return }
+//            let selector = NSSelectorFromString("openURL:")
+//            application.perform(selector, with: self.containerAppURL)
             
 //            let webView = WKWebView(frame: CGRect.zero)
 //            webView.load(URLRequest(url: self.containerAppURL))

@@ -20,6 +20,8 @@ extension JanusRoomManager {
 	static let publisherDidLeaveRoomNote = Notification.Name("kPublisherDidLeaveRoomNote")
 	/// New publisher Joined the room, Object: `JanusConnection`
 	static let publisherDidJoinRoomNote = Notification.Name("kPublisherDidJoinRoomNote")
+    /// Error Response, Object: error desc `String`
+    static let didReceiveErrorResponse = Notification.Name("kDidReceiveErrorResponse")
     /// External SampleCapturer did create, Object: `RTCExternalSampleCapturer` optional
     static let externalSampleCapturerDidCreateNote = Notification.Name("kExternalSampleCapturerDidCreateNote")
 }
@@ -34,10 +36,10 @@ final class JanusRoomManager {
 	var room: Int = 1234
 	/// Local Publisher Display Name 作为发布者在房间中显示的名称
 	var roomDisplayName: String = UIDevice.current.name
-	/// Local Publisher Session ID
-	var sessionID: Int64 = 0
-	/// Local Publisher Handle ID
-	var handleID: Int64 = 0
+	/// Session ID
+    private(set) var sessionID: Int64 = 0
+	/// Handle ID
+	private(set) var handleID: Int64 = 0
 	/// 当前加入的房间信息, from janus
 	var currentRoom: JanusJoinedRoom?
 	/// 所有的 Connection, 包含 local connection
@@ -47,14 +49,14 @@ final class JanusRoomManager {
     var signalingClient: SignalingClient
     
 	/// 是否为屏幕分享
-    var isBroadcast: Bool = false {
+    var isBroadcasting: Bool = false {
         didSet {
-            if isBroadcast {
+            if isBroadcasting {
                 roomDisplayName = UIDevice.current.name + "-Screen"
             }
         }
     }
-	
+    
 	private init() {
         signalingClient = SignalingClient(url: Config.signalingServerURL)
     }
@@ -108,14 +110,14 @@ extension JanusRoomManager {
     }
     
     /// Join a room with specific room number
-    func createRoom(room: Int) {
+    func joinRoom(room: Int) {
         self.room = room
-        signalingClient.createRoom(room: room)
+        signalingClient.createRoomSession(room: room)
     }
     
     /// leave & destroy current room
-    func destroyCurrentRoom() {
-        signalingClient.destroyRoom()
+    func leaveCurrentRoom() {
+        signalingClient.leaveRoom()
     }
     
     func unpubish() {
@@ -140,6 +142,17 @@ extension JanusRoomManager: SignalingClientConnectionDelegate {
 /// JanusResponseHandler
 extension JanusRoomManager: JanusResponseHandler {
 	
+    func janusHandler(receivedError reason: String) {
+        print("Received Janus Response Error: \(reason)")
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: Self.didReceiveErrorResponse, object: reason)
+        }
+    }
+    
+    func janusHandler(didCreateSession sessionID: Int64) {
+        self.sessionID = sessionID
+    }
+    
 	func janusHandler(received remoteSdp: RTCSessionDescription, handleID: Int64) {
 		print("Received remote sdp")
 		let rtcClient = connection(for: handleID)?.rtcClient
@@ -164,6 +177,9 @@ extension JanusRoomManager: JanusResponseHandler {
 	}
 	
 	func janusHandler(attachedSelf handleID: Int64) {
+        /// Save local handleID
+        self.handleID = handleID
+        
         let rtcClient = WebRTCClient(iceServers: Config.webRTCIceServers, id: "\(handleID)", delegate: self)
 		let localPublisher = JanusPublisher(id: sessionID, display: roomDisplayName)
 		let localConnection = JanusConnection(handleID: handleID, publisher: localPublisher)
@@ -173,11 +189,11 @@ extension JanusRoomManager: JanusResponseHandler {
 	
 	func janusHandler(joinedRoom handleID: Int64) {
 		if handleID == self.handleID {
-			/// Joined as a publisher
+			/// Joined as publisher
 			localConnection?.rtcClient?.offer(completion: { [weak self] (sdp) in
 				guard let self = self else { return }
 				self.signalingClient.sendOffer(sdp: sdp.sdp, isConfiguration: true)
-				/// Change Join Room State After Sending Local Offer to Remote.
+				/// Change Join Room State After Sending Offer to Remote.
 				DispatchQueue.main.async {
 					NotificationCenter.default.post(name: Self.roomStateChangeNote, object: false)
 				}

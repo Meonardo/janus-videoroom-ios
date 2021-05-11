@@ -74,6 +74,7 @@ extension ViewController {
     private func addNotificationObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(signalingStateChange(_:)), name: JanusRoomManager.signalingStateChangeNote, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(roomStateChange(_:)), name: JanusRoomManager.roomStateChangeNote, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveErrorResponse(_:)), name: JanusRoomManager.didReceiveErrorResponse, object: nil)
     }
     
     @objc private func signalingStateChange(_ sender: Notification) {
@@ -99,16 +100,22 @@ extension ViewController {
     }
     
     @objc private func roomStateChange(_ sender: Notification) {
-        guard let isDestroy = sender.object as? Bool else { return }
+        guard let isDestroyed = sender.object as? Bool else { return }
         
         ProgressHUD.dismiss()
-        if isDestroy {
+        if isDestroyed {
             joinButton.isEnabled = true
         } else {
             let video = VideoRoomViewController.showVideo()
             video.modalPresentationStyle = .currentContext
             present(video, animated: true, completion: nil)
         }
+    }
+    
+    @objc private func didReceiveErrorResponse(_ sender: Notification) {
+        guard let reason = sender.object as? String else { return }
+        
+        ProgressHUD.showError(reason)
     }
     
     @objc private func capturedDidChange(_ sender: Notification) {
@@ -135,7 +142,7 @@ extension ViewController {
             sendActionForBroadcastPicker()
         } else {
             ProgressHUD.show()
-            roomManager.createRoom(room: roomID)
+            roomManager.joinRoom(room: roomID)
         }
     }
     

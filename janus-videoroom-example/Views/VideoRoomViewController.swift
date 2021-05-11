@@ -138,7 +138,7 @@ extension VideoRoomViewController {
     @IBAction private func backAction(_ sender: Any) {
 		Alertift.alert(title: "Leave the Room?", message: "The room will be destroyed").action(.default("Leave")) {
 			ProgressHUD.show()
-			self.roomManager.destroyCurrentRoom()
+			self.roomManager.leaveCurrentRoom()
 		}.action(.cancel("Not now")).show(on: self)
     }
     
