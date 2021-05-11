@@ -29,7 +29,9 @@ class VideoRoomViewController: UIViewController {
 	@IBOutlet private weak var functionStackView: UIStackView!
     @IBOutlet private weak var speakerButton: UIButton!
     @IBOutlet private weak var microphonepButton: UIButton!
-	@IBOutlet private weak var screenSharingPlaceholder: UIView!
+    @IBOutlet private weak var videoButton: UIButton!
+    @IBOutlet private weak var cameraButton: UIButton!
+    @IBOutlet private weak var publishSwitch: UISwitch!
 	
 	private var broadcastPicker: RPSystemBroadcastPickerView?
 	
@@ -87,7 +89,8 @@ extension VideoRoomViewController {
         configureDataSource()
         configureCollectionView()
         
-        titleLabel.text = currentConnection?.publisher.display
+        publishSwitch.isOn = roomManager.shouldJoinedAsPubliherAtFirstTime
+        functionStackView.arrangedSubviews.compactMap({ $0 as? UIButton }).forEach({ $0.isEnabled = roomManager.shouldJoinedAsPubliherAtFirstTime })
     }
     
 	private func configureBroadcastPicker() {
@@ -96,7 +99,6 @@ extension VideoRoomViewController {
 		functionStackView.addArrangedSubview(picker)
 		picker.subviews.map({ $0 as? UIButton }).forEach({
 			$0?.imageView?.tintColor = .white
-			$0?.addTarget(self, action: #selector(self.startScreenSharing(_:)), for: .touchUpInside)
 		})
 		broadcastPicker = picker
 		picker.tintColor = .white
@@ -107,20 +109,17 @@ extension VideoRoomViewController {
         dataSource = roomManager.connections
         dataSource.removeAll(where: { $0 == currentConnection })
         
-        configureRenderer()
+        if currentConnection != nil {
+            configureRenderer()
+        }
+        titleLabel.text = currentConnection?.publisher.display
     }
 
     private func configureRenderer() {
         let renderer = RTCMTLVideoView(frame: view.bounds)
         view.insertSubview(renderer, at: 0)
         
-        if roomManager.isJoinedAsPublisher {
-            renderer.videoContentMode = .scaleAspectFill
-            renderer.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-            localRTCClient?.startCaptureLocalVideo(renderer: renderer)
-        } else {
-            currentConnection?.rtcClient?.attach(renderer: renderer, isLocal: false)
-        }
+        currentConnection?.rtcClient?.attach(renderer: renderer, isLocal: false)
         
         self.renderer = renderer
     }
@@ -157,9 +156,9 @@ extension VideoRoomViewController {
             localRTCClient?.switchCamera(renderer: renderer)
         } else {
             guard let localIndex = dataSource.lastIndex(where: { $0.isLocal }) else { return }
-            guard let cell = collectionView.cellForItem(at: IndexPath(item: localIndex, section: 0)) as? VideoRoomCollectionViewCell else { return }
+            guard let cell = collectionView.cellForItem(at: IndexPath(item: localIndex, section: 0)) as? VideoRoomCollectionViewCell, let renderView = cell.renderView else { return }
             let webRTCClient = dataSource[localIndex].rtcClient
-            webRTCClient?.switchCamera(renderer: cell.renderView)
+            webRTCClient?.switchCamera(renderer: renderView)
         }
     }
     
@@ -208,12 +207,16 @@ extension VideoRoomViewController {
 		}
 	}
     
-	@IBAction private func startScreenSharing(_ sender: UIButton) {
-//		screenSharingPlaceholder.isHidden = false
-	}
-	
-	@IBAction private func stopScreenSharing(_ sender: UIButton) {
-//		screenSharingPlaceholder.isHidden = true
+	@IBAction private func publishStateChanged(_ sender: UISwitch) {
+        if sender.isOn {
+            ProgressHUD.showSuccess("Publish")
+            roomManager.publish()
+            functionStackView.arrangedSubviews.compactMap({ $0 as? UIButton }).forEach({ $0.isEnabled = true })
+        } else {
+            ProgressHUD.showSuccess("Unpublish")
+            roomManager.unpubish()
+            functionStackView.arrangedSubviews.compactMap({ $0 as? UIButton }).forEach({ $0.isEnabled = false })
+        }
 	}
 	
     @objc private func roomStateDidChange(_ sender: Notification) {
@@ -230,7 +233,9 @@ extension VideoRoomViewController {
         guard let connection = sender.object as? JanusConnection else { return }
 		let handleID = connection.handleID
         
-        Alertift.alert(title: "\(connection.publisher.display) has left", message: nil).action(.cancel("dismiss")).show(on: self)
+        if connection.handleID != roomManager.handleID {
+            Alertift.alert(title: "\(connection.publisher.display) has left", message: nil).action(.cancel("dismiss")).show(on: self)
+        }
         
         guard let currentConnection = currentConnection, let renderer = renderer else { return }
         
@@ -249,8 +254,8 @@ extension VideoRoomViewController {
                 let connection = dataSource.remove(at: index)
                 
                 let indexPath = IndexPath(item: index, section: 0)
-                if let cell = collectionView.cellForItem(at: indexPath) as? VideoRoomCollectionViewCell {
-                    connection.rtcClient?.detach(renderer: cell.renderView, isLocal: connection.isLocal)
+                if let cell = collectionView.cellForItem(at: indexPath) as? VideoRoomCollectionViewCell, let renderView = cell.renderView {
+                    connection.rtcClient?.detach(renderer: renderView, isLocal: connection.isLocal)
                 }
                 
                 connection.rtcClient?.destory()
@@ -265,13 +270,15 @@ extension VideoRoomViewController {
             return
         }
         
-        if dataSource.isEmpty {
+        if currentConnection == nil {
             configureDataSource()
         } else {
             dataSource.append(connection)
         }
         
-        Alertift.alert(title: "\(connection.publisher.display) has joined", message: "a-\(connection.publisher.audioCodec ?? "null"), v-\(connection.publisher.videoCodec ?? "null")").action(.cancel("dismiss")).show(on: self)
+        if connection.handleID != roomManager.handleID {
+            Alertift.alert(title: "\(connection.publisher.display) has joined", message: "a-\(connection.publisher.audioCodec ?? "null"), v-\(connection.publisher.videoCodec ?? "null")").action(.cancel("dismiss")).show(on: self)
+        }
         
         collectionView.reloadData()
     }
@@ -288,11 +295,7 @@ extension VideoRoomViewController: UICollectionViewDelegate, UICollectionViewDat
         let connection = dataSource[indexPath.item]
         if let cell = cell as? VideoRoomCollectionViewCell {
             /// Attach Renderer to New Source
-            connection.rtcClient?.detach(renderer: cell.renderView, isLocal: connection.isLocal)
-            connection.rtcClient?.attach(renderer: cell.renderView, isLocal: connection.isLocal)
-            if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-                cell.renderView.frame = CGRect(origin: CGPoint.zero, size: layout.itemSize)
-            }
+            cell.update(with: connection)
         }
         return cell
     }

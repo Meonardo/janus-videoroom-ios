@@ -57,7 +57,6 @@ extension ViewController {
         
         textField.text = userDefault?.string(forKey: Config.lastJoinedRoomKey)
         
-        roomManager.shouldJoinedAsPubliherAtFirstTime = false
         roomManager.connect()
         
         if isSharingScreen {
@@ -118,14 +117,6 @@ extension ViewController {
         
         ProgressHUD.showError(reason)
     }
-    
-    @objc private func capturedDidChange(_ sender: Notification) {
-        if UIScreen.main.isCaptured {
-            segmentControl.selectedSegmentIndex = 1
-        } else {
-            segmentControl.selectedSegmentIndex = 0
-        }
-    }
 }
 
 /// Actions
@@ -139,19 +130,17 @@ extension ViewController {
         /// Save for next launch
         userDefault?.setValue(textField.text, forKey: Config.lastJoinedRoomKey)
         
-        if segmentControl.selectedSegmentIndex == 1 {
-            sendActionForBroadcastPicker()
-        } else {
-            ProgressHUD.show()
-            roomManager.joinRoom(room: roomID)
-        }
+        ProgressHUD.show()
+        roomManager.joinRoom(room: roomID)
     }
     
     @IBAction func segmentAction(_ sender: UISegmentedControl) {
         /// index = 0, Share Camera Content, index = 1, Share Screen Content
         let index = sender.selectedSegmentIndex
-        let titles = ["Camera", "Screen"]
-        ProgressHUD.showSuccess(titles[index], image: sender.imageForSegment(at: index)?.withTintColor(.white, renderingMode: .alwaysOriginal))
+        let titles = ["Publisher", "Subscriber"]
+        let selectedTitle = titles[index]
+        ProgressHUD.show(selectedTitle, icon: .star)
+        roomManager.shouldJoinedAsPubliherAtFirstTime = selectedTitle == "Publisher"
     }
     
     private func sendActionForBroadcastPicker() {

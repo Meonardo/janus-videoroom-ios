@@ -67,9 +67,10 @@ final class JanusRoomManager {
         }
     }
     
+    /// 在初次进入房间时, 是否以发布者身份来进入
     var shouldJoinedAsPubliherAtFirstTime: Bool = true
-    
-    var isJoinedAsPublisher: Bool = false
+    /// 是否已经以发布者身份进入过房间
+    private(set) var isJoinedAsPublisher: Bool = false
     
 	private init() {
         signalingClient = SignalingClient(url: Config.signalingServerURL)
@@ -83,6 +84,9 @@ final class JanusRoomManager {
         sessionID = 0
         handleID = 0
         currentRoom = nil
+        
+        roomState = .default
+        isJoinedAsPublisher = false
     }
 }
 
@@ -135,19 +139,20 @@ extension JanusRoomManager {
     }
     
     func publish() {
-        if isJoinedAsPublisher {
-            createLocalJanusConnection()
+        /// Create Local Connection
+        createLocalJanusConnection()
+        
+        if !isJoinedAsPublisher {
+            /// Join Room As Publisher
+            signalingClient.joinRoomAsPublisher(id: sessionID, handleID: handleID)
         } else {
-            signalingClient.publish(sessionID: sessionID, handleID: handleID)
+            /// Publish Local Media
+            publishLocalMediaStream()
         }
     }
     
     func unpubish() {
         signalingClient.unpublish()
-    }
-    
-    func republish() {
-        
     }
 }
  
@@ -177,13 +182,17 @@ extension JanusRoomManager: JanusResponseHandler {
     
 	func janusHandler(received remoteSdp: RTCSessionDescription, handleID: Int64) {
 		print("Received remote sdp")
-		let rtcClient = connection(for: handleID)?.rtcClient
+        let connection = connection(for: handleID)
+        let rtcClient = connection?.rtcClient
 		rtcClient?.set(remoteSdp: remoteSdp) { [weak self] (error) in
 			guard let self = self else { return }
 			
 			if handleID == self.handleID {
 				/// Local
-				
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: Self.publisherDidJoinRoomNote, object: connection, userInfo: nil)
+                    self.isJoinedAsPublisher = true
+                }
 			} else {
 				/// Others
 				rtcClient?.answer { [weak self] (sdp) in
@@ -216,15 +225,20 @@ extension JanusRoomManager: JanusResponseHandler {
 	func janusHandler(joinedRoom handleID: Int64) {
 		if handleID == self.handleID {
 			/// Joined as publisher
-            if shouldJoinedAsPubliherAtFirstTime {
+            if roomState == .default {
+                if shouldJoinedAsPubliherAtFirstTime {
+                    roomState = .publishingSubscribing
+                    publishLocalMediaStream()
+                } else {
+                    roomState = .subscribingOnly
+                }
+                /// Make a callback to Observers.
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: Self.roomStateChangeNote, object: self.roomState)
+                }
+            } else if roomState == .subscribingOnly {
                 roomState = .publishingSubscribing
                 publishLocalMediaStream()
-            } else {
-                roomState = .subscribingOnly
-            }
-            /// Make a callback to Observers.
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: Self.roomStateChangeNote, object: self.roomState)
             }
 		} else {
 			/// Publisher has attached
@@ -241,7 +255,6 @@ extension JanusRoomManager: JanusResponseHandler {
             let targetConnection = connection(for: handleID)
             /// Post Notification
             NotificationCenter.default.post(name: Self.publisherDidLeaveRoomNote, object: targetConnection, userInfo: nil)
-            
             /// Update Publishers
             let removedPublisherID = targetConnection?.publisher.id
             currentRoom?.publishers.removeAll(where: { $0.id == removedPublisherID })

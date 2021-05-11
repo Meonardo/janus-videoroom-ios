@@ -132,8 +132,8 @@ struct JanusUnpublish: Codable {
 	}
 }
 
-class JanusPublisher: Codable, CustomDebugStringConvertible {
-	
+class JanusPublisher: Codable, CustomDebugStringConvertible, Hashable {
+    
 	var id: Int64
 	var display: String
 	var videoCodec: String?
@@ -170,6 +170,14 @@ class JanusPublisher: Codable, CustomDebugStringConvertible {
 		videoCodec = ""
 		audioCodec = ""
 	}
+    
+    static func == (lhs: JanusPublisher, rhs: JanusPublisher) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
 
 class JanusJoinedRoom: Codable, CustomDebugStringConvertible {

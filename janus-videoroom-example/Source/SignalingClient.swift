@@ -373,15 +373,23 @@ extension SignalingClient {
 	private func processJoinedRoom(data: Data) {
 		do {
 			let joined = try data.decoded() as JanusJoinedRoom
-			/// Save the room just joined
-			roomManager.currentRoom = joined
+			/// Save/Update the room just joined
+            if let currentRoom = roomManager.currentRoom {
+                roomManager.currentRoom?.privateID = joined.privateID
+                roomManager.currentRoom?.id = joined.id
+                
+                let newPublishers = Set(joined.publishers).subtracting(currentRoom.publishers)
+                newPublishers.forEach{( attach(publisher: $0) )}
+                roomManager.currentRoom?.publishers = joined.publishers
+            } else {
+                roomManager.currentRoom = joined
+                if !roomManager.isBroadcasting {
+                    /// Attach all the active publishers, if its NOT broadcast screen.
+                    joined.publishers.forEach{( attach(publisher: $0) )}
+                }
+            }
             
 			responseHandler?.janusHandler(joinedRoom: roomManager.handleID)
-			
-			if !roomManager.isBroadcasting {
-				/// Attach all the active publishers, if NOT broadcast screen.
-				joined.publishers.forEach{( attach(publisher: $0) )}
-			}
 		} catch {
 			print(error)
 		}
