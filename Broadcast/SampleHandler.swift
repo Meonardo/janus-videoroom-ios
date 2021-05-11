@@ -108,8 +108,8 @@ extension SampleHandler {
     }
     
     @objc private func roomStateChange(_ sender: Notification) {
-        guard let isDestroy = sender.object as? Bool else { return }
-        print(isDestroy)
+        guard let roomState = sender.object as? JanusRoomState else { return }
+        print(roomState)
     }
     
     @objc private func sampleBufferCapturerDidCreate(_ sender: Notification) {

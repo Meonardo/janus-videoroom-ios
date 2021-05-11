@@ -8,11 +8,19 @@
 import UIKit
 import WebRTC
 
+enum JanusRoomState {
+    case `default`, joined, publishingSubscribing, subscribingOnly, left
+    
+    var isStreaming: Bool {
+        self == .publishingSubscribing || self == .subscribingOnly
+    }
+}
+
 /// Public Notifications
 extension JanusRoomManager {
     /// Signaling State Change Notification, Object: `SignalingConnectionState`
     static let signalingStateChangeNote = Notification.Name("kSignalingStateChangeNote")
-    /// Event for creating(true) or destroying(false) a room, 创建或者离开房间事件回调, Object: `Bool`
+    /// Room State Update Events, 房间状态更新事件回调, Object: `JanusRoomState`
     static let roomStateChangeNote = Notification.Name("kRoomStateChangeNote")
     /// WebRTC Client State Change Events, Object: `(WebRTCClient, RTCIceConnectionState)`
     static let rtcClientStateChangeNote = Notification.Name("kRTCClientStateChangeNote")
@@ -48,6 +56,8 @@ final class JanusRoomManager {
     /// Handle Send & Process Jannus Messages
     var signalingClient: SignalingClient
     
+    var roomState: JanusRoomState = .default
+    
 	/// 是否为屏幕分享
     var isBroadcasting: Bool = false {
         didSet {
@@ -56,6 +66,10 @@ final class JanusRoomManager {
             }
         }
     }
+    
+    var shouldJoinedAsPubliherAtFirstTime: Bool = true
+    
+    var isJoinedAsPublisher: Bool = false
     
 	private init() {
         signalingClient = SignalingClient(url: Config.signalingServerURL)
@@ -120,6 +134,14 @@ extension JanusRoomManager {
         signalingClient.leaveRoom()
     }
     
+    func publish() {
+        if isJoinedAsPublisher {
+            createLocalJanusConnection()
+        } else {
+            signalingClient.publish(sessionID: sessionID, handleID: handleID)
+        }
+    }
+    
     func unpubish() {
         signalingClient.unpublish()
     }
@@ -176,28 +198,34 @@ extension JanusRoomManager: JanusResponseHandler {
 		print("Received remote candidate")
 	}
 	
-	func janusHandler(attachedSelf handleID: Int64) {
+	func janusHandler(fetched handleID: Int64) {
         /// Save local handleID
         self.handleID = handleID
         
-        let rtcClient = WebRTCClient(iceServers: Config.webRTCIceServers, id: "\(handleID)", delegate: self)
-		let localPublisher = JanusPublisher(id: sessionID, display: roomDisplayName)
-		let localConnection = JanusConnection(handleID: handleID, publisher: localPublisher)
-		localConnection.rtcClient = rtcClient
-		connections.insert(localConnection, at: 0)
+        if shouldJoinedAsPubliherAtFirstTime {
+            /// Join Room As Publisher
+            signalingClient.joinRoomAsPublisher(id: sessionID, handleID: handleID)
+            /// Local Connection
+            createLocalJanusConnection()
+        } else {
+            /// Get Participants then Subscribe
+            signalingClient.listparticipants()
+        }
 	}
 	
 	func janusHandler(joinedRoom handleID: Int64) {
 		if handleID == self.handleID {
 			/// Joined as publisher
-			localConnection?.rtcClient?.offer(completion: { [weak self] (sdp) in
-				guard let self = self else { return }
-				self.signalingClient.sendOffer(sdp: sdp.sdp, isConfiguration: true)
-				/// Change Join Room State After Sending Offer to Remote.
-				DispatchQueue.main.async {
-					NotificationCenter.default.post(name: Self.roomStateChangeNote, object: false)
-				}
-			})
+            if shouldJoinedAsPubliherAtFirstTime {
+                roomState = .publishingSubscribing
+                publishLocalMediaStream()
+            } else {
+                roomState = .subscribingOnly
+            }
+            /// Make a callback to Observers.
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Self.roomStateChangeNote, object: self.roomState)
+            }
 		} else {
 			/// Publisher has attached
 			guard let connection = connection(for: handleID) else { return }
@@ -230,11 +258,32 @@ extension JanusRoomManager: JanusResponseHandler {
 		connections.append(connection)
 	}
 	
-	func janusHandlerDidDestroyRoom() {
-		NotificationCenter.default.post(name: Self.roomStateChangeNote, object: true)
+	func janusHandlerDidLeaveRoom() {
+        roomState = .left
+        NotificationCenter.default.post(name: Self.roomStateChangeNote, object: roomState)
 		/// Reset for next creating a room
 		reset()
 	}
+    
+    /// Send Offer to Remote
+    private func publishLocalMediaStream() {
+        localConnection?.rtcClient?.offer(completion: { [weak self] (sdp) in
+            guard let self = self else { return }
+            self.signalingClient.sendOffer(sdp: sdp.sdp, isConfiguration: true)
+        })
+    }
+    
+    /// Create Local Connection Object to Share Screen or Camera
+    private func createLocalJanusConnection() {
+        if localConnection != nil {
+            return
+        }
+        let rtcClient = WebRTCClient(iceServers: Config.webRTCIceServers, id: "\(handleID)", delegate: self)
+        let localPublisher = JanusPublisher(id: sessionID, display: roomDisplayName)
+        let localConnection = JanusConnection(handleID: handleID, publisher: localPublisher)
+        localConnection.rtcClient = rtcClient
+        connections.insert(localConnection, at: 0)
+    }
 }
 
 extension JanusRoomManager: WebRTCClientDelegate {

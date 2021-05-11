@@ -84,7 +84,6 @@ extension VideoRoomViewController {
     private func prepare() {
         addObservers()
 		configureBroadcastPicker()
-        configureRenderer()
         configureDataSource()
         configureCollectionView()
         
@@ -102,21 +101,28 @@ extension VideoRoomViewController {
 		broadcastPicker = picker
 		picker.tintColor = .white
 	}
-	
-    private func configureRenderer() {
-        let renderer = RTCMTLVideoView(frame: view.bounds)
-        renderer.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        view.insertSubview(renderer, at: 0)
-        renderer.videoContentMode = .scaleAspectFill
 
-        localRTCClient?.startCaptureLocalVideo(renderer: renderer)
-        self.renderer = renderer
-    }
-    
     private func configureDataSource() {
-        currentConnection = roomManager.localConnection
+        currentConnection = roomManager.connections.filter({ $0.isLocal == false }).first
         dataSource = roomManager.connections
         dataSource.removeAll(where: { $0 == currentConnection })
+        
+        configureRenderer()
+    }
+
+    private func configureRenderer() {
+        let renderer = RTCMTLVideoView(frame: view.bounds)
+        view.insertSubview(renderer, at: 0)
+        
+        if roomManager.isJoinedAsPublisher {
+            renderer.videoContentMode = .scaleAspectFill
+            renderer.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+            localRTCClient?.startCaptureLocalVideo(renderer: renderer)
+        } else {
+            currentConnection?.rtcClient?.attach(renderer: renderer, isLocal: false)
+        }
+        
+        self.renderer = renderer
     }
     
     private func configureCollectionView() {
@@ -211,10 +217,11 @@ extension VideoRoomViewController {
 	}
 	
     @objc private func roomStateDidChange(_ sender: Notification) {
-        guard let isDestroy = sender.object as? Bool else { return }
+        guard let roomState = sender.object as? JanusRoomState else { return }
         
         ProgressHUD.dismiss()
-        if isDestroy {
+        
+        if roomState == .left {
             dismiss(animated: true, completion: nil)
         }
     }
@@ -257,7 +264,12 @@ extension VideoRoomViewController {
         if dataSource.contains(where: { $0.handleID == connection.handleID }) {
             return
         }
-        dataSource.append(connection)
+        
+        if dataSource.isEmpty {
+            configureDataSource()
+        } else {
+            dataSource.append(connection)
+        }
         
         Alertift.alert(title: "\(connection.publisher.display) has joined", message: "a-\(connection.publisher.audioCodec ?? "null"), v-\(connection.publisher.videoCodec ?? "null")").action(.cancel("dismiss")).show(on: self)
         

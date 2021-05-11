@@ -27,14 +27,14 @@ protocol JanusResponseHandler: AnyObject {
     
 	func janusHandler(received remoteSdp: RTCSessionDescription, handleID: Int64)
 	func janusHandler(received candidate: RTCIceCandidate)
-	func janusHandler(attachedSelf handleID: Int64)
+	func janusHandler(fetched handleID: Int64)
 	
 	func janusHandler(joinedRoom handleID: Int64)
 	func janusHandler(leftRoom handleID: Int64, reason: String?)
 	
 	func janusHandler(didAttach publisher: JanusPublisher, handleID: Int64)
 	
-	func janusHandlerDidDestroyRoom()
+	func janusHandlerDidLeaveRoom()
 }
 
 class SignalingClient {
@@ -154,7 +154,7 @@ extension SignalingClient {
 		}
 	}
 	
-	/// Attach, 作为发布者身份加入房间时获取 handle_id
+	/// Attach, to Fetch HandleID
 	private func sendAttachRequest(id: Int64) {
 		let req = JanusAttach(id: id)
 		do {
@@ -166,7 +166,7 @@ extension SignalingClient {
 	}
 	
 	/// 加入房间 As Publisher
-	private func joinRoomAsPublisher(id: Int64, handleID: Int64) {
+	func joinRoomAsPublisher(id: Int64, handleID: Int64) {
         let room = roomManager.room
         let display = roomManager.roomDisplayName
         
@@ -180,10 +180,8 @@ extension SignalingClient {
 	}
 	
 	/// 发布
-	func publish() {
-		let handleID = roomManager.handleID
-		let id = roomManager.sessionID
-		joinRoomAsPublisher(id: id, handleID: handleID)
+    func publish(sessionID: Int64, handleID: Int64) {
+		joinRoomAsPublisher(id: sessionID, handleID: handleID)
 	}
 	
 	/// 取消发布
@@ -349,9 +347,10 @@ extension SignalingClient {
                             /// Attach to Fetch Handle ID
                             sendAttachRequest(id: id)
                         } else if transaction == "Attach" {
-                            responseHandler?.janusHandler(attachedSelf: id)
-                            /// Join Room As Publisher
-                            joinRoomAsPublisher(id: roomManager.sessionID, handleID: id)
+                            /// Send Keep-alive Message
+                            configureTimer()
+                            /// 
+                            responseHandler?.janusHandler(fetched: id)
                         } else if transaction.hasPrefix("Attach.") {
                             /// Attached 成功
                             guard let last = transaction.components(separatedBy: ".").last, let publisherID = Int64(last) else { return }
@@ -376,13 +375,11 @@ extension SignalingClient {
 			let joined = try data.decoded() as JanusJoinedRoom
 			/// Save the room just joined
 			roomManager.currentRoom = joined
-			/// 
+            
 			responseHandler?.janusHandler(joinedRoom: roomManager.handleID)
-			/// Send keep-alive cmd
-			configureTimer()
 			
 			if !roomManager.isBroadcasting {
-				/// Attach all the active publisher, if NOT broadcast screen.
+				/// Attach all the active publishers, if NOT broadcast screen.
 				joined.publishers.forEach{( attach(publisher: $0) )}
 			}
 		} catch {
@@ -396,15 +393,11 @@ extension SignalingClient {
         guard let joined = JanusJoinedRoom(data: data) else { return }
         /// Save the room just joined
         roomManager.currentRoom = joined
-        ///
+
         responseHandler?.janusHandler(joinedRoom: roomManager.handleID)
-        /// Send keep-alive cmd
-        configureTimer()
         
-        if !roomManager.isBroadcasting {
-            /// Attach all the active publisher, if NOT broadcast screen.
-            joined.publishers.forEach{( attach(publisher: $0) )}
-        }
+        /// Attach all the active publishers.
+        joined.publishers.forEach{( attach(publisher: $0) )}
     }
     
 	private func processConfigures(data: [String: Any]) {
@@ -429,7 +422,7 @@ extension SignalingClient {
 	}
 
 	private func destroyRoomFinished() {
-		responseHandler?.janusHandlerDidDestroyRoom()
+		responseHandler?.janusHandlerDidLeaveRoom()
 	}
 	
 	private func processJoinedPublisher(data: [String: Any]) {

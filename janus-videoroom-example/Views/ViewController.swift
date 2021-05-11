@@ -57,6 +57,7 @@ extension ViewController {
         
         textField.text = userDefault?.string(forKey: Config.lastJoinedRoomKey)
         
+        roomManager.shouldJoinedAsPubliherAtFirstTime = false
         roomManager.connect()
         
         if isSharingScreen {
@@ -100,12 +101,12 @@ extension ViewController {
     }
     
     @objc private func roomStateChange(_ sender: Notification) {
-        guard let isDestroyed = sender.object as? Bool else { return }
+        guard let roomState = sender.object as? JanusRoomState else { return }
         
         ProgressHUD.dismiss()
-        if isDestroyed {
+        if roomState == .left {
             joinButton.isEnabled = true
-        } else {
+        } else if roomState.isStreaming {
             let video = VideoRoomViewController.showVideo()
             video.modalPresentationStyle = .currentContext
             present(video, animated: true, completion: nil)
