@@ -182,15 +182,15 @@ extension JanusRoomManager: JanusResponseHandler {
     
 	func janusHandler(received remoteSdp: RTCSessionDescription, handleID: Int64) {
 		print("Received remote sdp")
-        let connection = connection(for: handleID)
-        let rtcClient = connection?.rtcClient
+        let connection_ = connection(for: handleID)
+        let rtcClient = connection_?.rtcClient
 		rtcClient?.set(remoteSdp: remoteSdp) { [weak self] (error) in
 			guard let self = self else { return }
 			
 			if handleID == self.handleID {
 				/// Local
                 DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: Self.publisherDidJoinRoomNote, object: connection, userInfo: nil)
+                    NotificationCenter.default.post(name: Self.publisherDidJoinRoomNote, object: connection_, userInfo: nil)
                     self.isJoinedAsPublisher = true
                 }
 			} else {

@@ -13,7 +13,7 @@ enum BroadcastState: Int, Codable {
 
 struct Config {
     /// Janus Official Demo Signaling Server Address: wss://janus.conf.meetecho.com/ws
-    static let signalingServerURL = URL(string: "ws://192.168.5.59:8188")!
+    static let signalingServerURL = URL(string: "ws://192.168.31.240:8188")!
     
     static let webRTCIceServers: [String] = [
         "stun:stun.l.google.com:19302",

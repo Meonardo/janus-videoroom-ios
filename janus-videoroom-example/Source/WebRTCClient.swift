@@ -91,13 +91,11 @@ final class WebRTCClient: NSObject {
 extension WebRTCClient {
 	
     private func createMediaSenders() {
-        if #available(iOSApplicationExtension 13, *) {
-        } else {
-            // Audio
-            let audioTrack = createAudioTrack()
-            peerConnection.add(audioTrack, streamIds: [identifier])
-        }
-        
+		#if !TARGET_IS_EXTENSION
+		// Audio
+		let audioTrack = createAudioTrack()
+		peerConnection.add(audioTrack, streamIds: [identifier])
+		#endif
         // Video
         let videoTrack = createVideoTrack()
         localVideoTrack = videoTrack
