@@ -36,6 +36,7 @@
 		FB481338263153BC0010E58E /* WebRTCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC07262EF68A00672386 /* WebRTCClient.swift */; };
 		FB48134D26315E900010E58E /* RTCStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC1D262EFA4100672386 /* RTCStates.swift */; };
 		FB4813552631644E0010E58E /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = FB4813542631644E0010E58E /* Starscream */; };
+		FB6C0EE0266A18D700642AFE /* WebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = FB6C0EDF266A18D700642AFE /* WebRTC */; };
 		FB97AB41262FC74D00573B3B /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB97AB40262FC74D00573B3B /* ProgressHUD.swift */; };
 		FB97AB44262FD4AF00573B3B /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB97AB43262FD4AF00573B3B /* Config.swift */; };
 		FBA88085263C05510019A4FF /* Wormhole in Frameworks */ = {isa = PBXBuildFile; productRef = FBA88084263C05510019A4FF /* Wormhole */; };
@@ -44,8 +45,6 @@
 		FBAC1FB02637FBB3007C2AFD /* ScreenSampleCapturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAC1FAE2637FB97007C2AFD /* ScreenSampleCapturer.swift */; };
 		FBEAC105262FB0CA008CDC23 /* VideoRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEAC104262FB0CA008CDC23 /* VideoRoomViewController.swift */; };
 		FBEAC109262FB7B1008CDC23 /* VideoRoomCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEAC108262FB7B1008CDC23 /* VideoRoomCollectionViewCell.swift */; };
-		FBF2341726469AD7002E5DAC /* WebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = FBF2341626469AD7002E5DAC /* WebRTC */; };
-		FBF2341926469ADF002E5DAC /* WebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = FBF2341826469ADF002E5DAC /* WebRTC */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +67,16 @@
 				FB16829126311B5A00641C9A /* Broadcast.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB6C0EDD266A0DD500642AFE /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -109,7 +118,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A053DBFC262EF49B00672386 /* Starscream in Frameworks */,
-				FBF2341726469AD7002E5DAC /* WebRTC in Frameworks */,
+				FB6C0EE0266A18D700642AFE /* WebRTC in Frameworks */,
 				FBA88085263C05510019A4FF /* Wormhole in Frameworks */,
 				A053DC00262EF4F400672386 /* Alertift in Frameworks */,
 			);
@@ -120,7 +129,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB16827B26311B5A00641C9A /* ReplayKit.framework in Frameworks */,
-				FBF2341926469ADF002E5DAC /* WebRTC in Frameworks */,
 				FBA88087263C055B0019A4FF /* Wormhole in Frameworks */,
 				FB4813552631644E0010E58E /* Starscream in Frameworks */,
 			);
@@ -230,6 +238,7 @@
 				A053DBDF262EF24500672386 /* Frameworks */,
 				A053DBE0262EF24500672386 /* Resources */,
 				FB16829826311B5A00641C9A /* Embed App Extensions */,
+				FB6C0EDD266A0DD500642AFE /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -241,7 +250,7 @@
 				A053DBFB262EF49B00672386 /* Starscream */,
 				A053DBFF262EF4F400672386 /* Alertift */,
 				FBA88084263C05510019A4FF /* Wormhole */,
-				FBF2341626469AD7002E5DAC /* WebRTC */,
+				FB6C0EDF266A18D700642AFE /* WebRTC */,
 			);
 			productName = "janus-videoroom-example";
 			productReference = A053DBE2262EF24500672386 /* janus-videoroom-example.app */;
@@ -263,7 +272,6 @@
 			packageProductDependencies = (
 				FB4813542631644E0010E58E /* Starscream */,
 				FBA88086263C055B0019A4FF /* Wormhole */,
-				FBF2341826469ADF002E5DAC /* WebRTC */,
 			);
 			productName = Broadcast;
 			productReference = FB16827826311B5A00641C9A /* Broadcast.appex */;
@@ -301,7 +309,7 @@
 				A053DBFA262EF49B00672386 /* XCRemoteSwiftPackageReference "Starscream" */,
 				A053DBFE262EF4F400672386 /* XCRemoteSwiftPackageReference "Alertift" */,
 				FBA88083263C05510019A4FF /* XCRemoteSwiftPackageReference "Wormhole" */,
-				FBF2341526469AD7002E5DAC /* XCRemoteSwiftPackageReference "WebRTC" */,
+				FB6C0EDE266A18D700642AFE /* XCRemoteSwiftPackageReference "WebRTC" */,
 			);
 			productRefGroup = A053DBE3262EF24500672386 /* Products */;
 			projectDirPath = "";
@@ -678,20 +686,20 @@
 				minimumVersion = 4.2.0;
 			};
 		};
+		FB6C0EDE266A18D700642AFE /* XCRemoteSwiftPackageReference "WebRTC" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Meonardo/WebRTC.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 91.0.1;
+			};
+		};
 		FBA88083263C05510019A4FF /* XCRemoteSwiftPackageReference "Wormhole" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Meonardo/Wormhole.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.1.0;
-			};
-		};
-		FBF2341526469AD7002E5DAC /* XCRemoteSwiftPackageReference "WebRTC" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Meonardo/WebRTC.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 90.1.5;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -712,6 +720,11 @@
 			package = A053DBFA262EF49B00672386 /* XCRemoteSwiftPackageReference "Starscream" */;
 			productName = Starscream;
 		};
+		FB6C0EDF266A18D700642AFE /* WebRTC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB6C0EDE266A18D700642AFE /* XCRemoteSwiftPackageReference "WebRTC" */;
+			productName = WebRTC;
+		};
 		FBA88084263C05510019A4FF /* Wormhole */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FBA88083263C05510019A4FF /* XCRemoteSwiftPackageReference "Wormhole" */;
@@ -721,16 +734,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FBA88083263C05510019A4FF /* XCRemoteSwiftPackageReference "Wormhole" */;
 			productName = Wormhole;
-		};
-		FBF2341626469AD7002E5DAC /* WebRTC */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FBF2341526469AD7002E5DAC /* XCRemoteSwiftPackageReference "WebRTC" */;
-			productName = WebRTC;
-		};
-		FBF2341826469ADF002E5DAC /* WebRTC */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FBF2341526469AD7002E5DAC /* XCRemoteSwiftPackageReference "WebRTC" */;
-			productName = WebRTC;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

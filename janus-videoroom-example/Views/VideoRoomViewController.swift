@@ -56,9 +56,9 @@ class VideoRoomViewController: UIViewController {
         print("VideoViewController is deinit...")
     }
     
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        .portrait
-    }
+//    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+//        .portrait
+//    }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
@@ -118,6 +118,7 @@ extension VideoRoomViewController {
     private func configureRenderer() {
         let renderer = RTCMTLVideoView(frame: view.bounds)
         view.insertSubview(renderer, at: 0)
+        renderer.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
         currentConnection?.rtcClient?.attach(renderer: renderer, isLocal: false)
         

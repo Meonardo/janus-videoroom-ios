@@ -30,7 +30,9 @@ final class WebRTCClient: NSObject {
 		return RTCPeerConnectionFactory(encoderFactory: videoEncoderFactory, decoderFactory: videoDecoderFactory)
 	}()
 	
+    var identifier: String
 	weak var delegate: WebRTCClientDelegate?
+    
 	private let peerConnection: RTCPeerConnection
 	private let rtcAudioSession =  RTCAudioSession.sharedInstance()
 	private let audioQueue = DispatchQueue(label: "audio")
@@ -41,12 +43,15 @@ final class WebRTCClient: NSObject {
 	private var localVideoTrack: RTCVideoTrack?
 	private var remoteVideoTrack: RTCVideoTrack?
 
+    /// Local rtcClient params
 	let maxResolution: Int32 = 720
     let maxFps = 20
-    
-	var identifier: String
 	var cameraPosition: AVCaptureDevice.Position = .front
-	
+    /// Caputuring orientation
+    /// Notice: the camera postion defalut is *Front*, for setting the mirror = true, so the `videoRotation` is _270.
+    private var videoRotation: RTCVideoRotation = ._270
+    private var isCameraCaputuring: Bool = false
+    
 	@available(*, unavailable)
 	override init() {
 		fatalError("WebRTCClient:init is unavailable")
@@ -76,6 +81,7 @@ final class WebRTCClient: NSObject {
         
 		super.init()
 		
+        addNotificationObservers()
 		createMediaSenders()
 		configureAudioSession()
 		peerConnection.delegate = self
@@ -84,12 +90,20 @@ final class WebRTCClient: NSObject {
 	func destory() {
 		peerConnection.delegate = nil
 		peerConnection.close()
+        
+        NotificationCenter.default.removeObserver(self)
 	}
 }
 
 // MARK: - Configurations
 extension WebRTCClient {
 	
+    private func addNotificationObservers() {
+        #if !TARGET_IS_EXTENSION
+        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
+        #endif
+    }
+    
     private func createMediaSenders() {
 		#if !TARGET_IS_EXTENSION
 		// Audio
@@ -136,6 +150,45 @@ extension WebRTCClient {
 		let videoTrack = WebRTCClient.factory.videoTrack(with: videoSource, trackId: "video0")
 		return videoTrack
 	}
+    
+    @available(iOSApplicationExtension, unavailable)
+    @objc private func orientationDidChange(_ sender: Notification) {
+        /// Use current device orientation to adjust `videoRotation`, so call this func before `adjustRotationIfNecessary`.
+        updateVideoOrientationIfNecessary()
+        /// Should update renderer rotation and caputure rotation
+        guard let renderers = localVideoTrack?.renderers as? [RTCMTLVideoView] else { return }
+        renderers.forEach({ adjustRotationIfNecessary(for: $0) })
+    }
+    
+    @available(iOSApplicationExtension, unavailable)
+    private func adjustRotationIfNecessary(for renderer: RTCMTLVideoView) {
+        renderer.rotationOverride = NSNumber(integerLiteral: videoRotation.rawValue)
+    }
+    
+    /// Notice: do NOT support **upsidedown**
+    @available(iOSApplicationExtension, unavailable)
+    private func updateVideoOrientationIfNecessary() {
+        let orientation = UIDevice.current.orientation
+        if orientation.isPortrait {
+            if cameraPosition == .front {
+                videoRotation = ._270
+            } else {
+                videoRotation = ._90
+            }
+        } else if orientation == .landscapeLeft {
+            if cameraPosition == .front {
+                videoRotation = ._180
+            } else {
+                videoRotation = ._0
+            }
+        } else if orientation == .landscapeRight {
+            if cameraPosition == .front {
+                videoRotation = ._0
+            } else {
+                videoRotation = ._180
+            }
+        }
+    }
 }
 
 // MARK: - Signaling
@@ -181,11 +234,12 @@ extension WebRTCClient {
 // MARK: - Renderer Handling
 extension WebRTCClient {
 	
+    @available(iOSApplicationExtension, unavailable)
 	func detach(renderer: RTCVideoRenderer, isLocal: Bool) {
 		if isLocal {
-			localVideoTrack?.remove(renderer)
+			localVideoTrack?.removeRenderer(renderer)
 		} else {
-			remoteVideoTrack?.remove(renderer)
+			remoteVideoTrack?.removeRenderer(renderer)
 		}
 	}
 	
@@ -194,18 +248,30 @@ extension WebRTCClient {
         /// **Notice**: Use `RTCMTLVideoView` as renderer only.
         guard let view = renderer as? RTCMTLVideoView else { return }
         if isLocal {
-            adjustTransformIfNecessary(for: view)
+            updateVideoOrientationIfNecessary()
+            adjustRotationIfNecessary(for: view)
             startCaptureLocalVideo(renderer: renderer)
         } else {
-            view.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+            /// Reset for reused renderer
+            videoRotation = ._0
+            if let renderer = renderer as? RTCMTLVideoView {
+                adjustRotationIfNecessary(for: renderer)
+            }
             renderRemoteVideo(to: renderer)
         }
 	}
 	
     @available(iOSApplicationExtension, unavailable)
 	func startCaptureLocalVideo(renderer: RTCVideoRenderer) {
+        
+        if isCameraCaputuring {
+            localVideoTrack?.addRenderer(renderer)
+            return
+        }
+        
 		guard let capturer = videoCapturer as? RTCCameraVideoCapturer else { return }
-		
+        isCameraCaputuring = true
+        
 		if let camera = RTCCameraVideoCapturer.captureDevices().first(where: { $0.position == cameraPosition }) {
 			let supportFormats = RTCCameraVideoCapturer.supportedFormats(for: camera)
 			guard let selectedFormat = (supportFormats.filter({ (f) -> Bool in
@@ -217,15 +283,15 @@ extension WebRTCClient {
             let fps = min(Int(fpsRange.maxFrameRate), maxFps)
 			capturer.startCapture(with: camera,
 								  format: selectedFormat,
-                                  fps: fps) { [weak self] error in
+                                  fps: fps) { error in
                 DispatchQueue.main.async {
-                    if let renderer = renderer as? RTCMTLVideoView {
-                        self?.adjustTransformIfNecessary(for: renderer)
+                    if let connection = capturer.captureSession.connections.first(where: { $0.isActive && $0.isEnabled && $0.isVideoMirroringSupported }) {
+                        connection.isVideoMirrored = true
                     }
                 }
             }
 			
-			localVideoTrack?.add(renderer)
+			localVideoTrack?.addRenderer(renderer)
 		}
 	}
     
@@ -234,7 +300,7 @@ extension WebRTCClient {
 		guard let capturer = videoCapturer as? RTCCameraVideoCapturer else { return }
 		
 		cameraPosition = cameraPosition == .front ? .back : .front
-		
+        
 		if let camera = RTCCameraVideoCapturer.captureDevices().first(where: { $0.position == cameraPosition }) {
 			let supportFormats = RTCCameraVideoCapturer.supportedFormats(for: camera)
 			guard let selectedFormat = (supportFormats.filter({ (f) -> Bool in
@@ -247,9 +313,15 @@ extension WebRTCClient {
 			capturer.startCapture(with: camera,
 								  format: selectedFormat,
                                   fps: fps) { [weak self] error in
+                guard let self = self else { return }
                 DispatchQueue.main.async {
+                    self.updateVideoOrientationIfNecessary()
                     if let renderer = renderer as? RTCMTLVideoView {
-                        self?.adjustTransformIfNecessary(for: renderer)
+                        self.adjustRotationIfNecessary(for: renderer)
+                    }
+                    
+                    if let connection = capturer.captureSession.connections.first(where: { $0.isActive && $0.isEnabled && $0.isVideoMirroringSupported }) {
+                        connection.isVideoMirrored = self.cameraPosition == .front
                     }
                 }
             }
@@ -257,24 +329,16 @@ extension WebRTCClient {
 	}
 	
 	func removeLocalVideoRender(from renderer: RTCVideoRenderer) {
-		localVideoTrack?.remove(renderer)
+		localVideoTrack?.removeRenderer(renderer)
 	}
 	
 	func renderRemoteVideo(to renderer: RTCVideoRenderer) {
-		remoteVideoTrack?.add(renderer)
+		remoteVideoTrack?.addRenderer(renderer)
 	}
 	
 	func removeRemoteVideoRender(from renderer: RTCVideoRenderer) {
-		remoteVideoTrack?.remove(renderer)
+		remoteVideoTrack?.removeRenderer(renderer)
 	}
-    
-    private func adjustTransformIfNecessary(for renderer: RTCMTLVideoView) {
-        if cameraPosition == .front {
-            renderer.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        } else {
-            renderer.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
-        }
-    }
 }
 
 extension WebRTCClient: RTCPeerConnectionDelegate {
@@ -323,7 +387,7 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
 extension WebRTCClient: RTCVideoCapturerOrientationDelegate {
     
     func rotationForCameraVideoCapturer() -> RTCVideoRotation {
-        RTCVideoRotation._90
+        videoRotation
     }
 }
 
