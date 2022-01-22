@@ -38,6 +38,7 @@ struct JanusJoinRoom: Codable {
 		var ptype = "publisher"
 		var room: Int
         var display: String
+        var pin: String
 	}
 	
 	var janus = "message"
@@ -49,7 +50,7 @@ struct JanusJoinRoom: Codable {
     init(room: Int, id: Int64, handleID: Int64, display: String) {
 		self.session_id = id
 		self.handle_id = handleID
-        body = Body(room: room, display: display)
+        body = Body(room: room, display: display, pin: "\(room)")
 	}
 }
 
@@ -238,6 +239,7 @@ struct JanusSubscribeJoin: Codable {
 		var ptype = "subscriber"
 		var room: Int
 		var feed: Int64
+        var pin: String
         /// not necessary
 //		var private_id: Int64
 	}
@@ -249,7 +251,7 @@ struct JanusSubscribeJoin: Codable {
 	var handle_id: Int64
 	
 	init(room: JanusJoinedRoom, publisher: JanusPublisher, handleID: Int64, sessionID: Int64) {
-		body = Body(room: room.room, feed: publisher.id)
+        body = Body(room: room.room, feed: publisher.id, pin: "\(room.room)")
 		handle_id = handleID
 		session_id = sessionID
 	}

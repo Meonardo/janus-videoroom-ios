@@ -19,6 +19,8 @@ class ViewController: UIViewController {
     
     private let userDefault = UserDefaults(suiteName: Config.sharedGroupName)
     
+    private let socket = InSocket()
+    
     private var roomManager: JanusRoomManager {
         JanusRoomManager.shared
     }
@@ -69,6 +71,10 @@ extension ViewController {
                 Alertift.alert(title: "New Capture State", message: "\(newState)").action(.cancel("Dismiss")).show()
             }
         }
+    }
+    
+    private func addUDPSocketListener() {
+        
     }
     
     private func addNotificationObserver() {

@@ -37,6 +37,10 @@
 		FB48134D26315E900010E58E /* RTCStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DC1D262EFA4100672386 /* RTCStates.swift */; };
 		FB4813552631644E0010E58E /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = FB4813542631644E0010E58E /* Starscream */; };
 		FB6C0EE0266A18D700642AFE /* WebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = FB6C0EDF266A18D700642AFE /* WebRTC */; };
+		FB8D40E4279BE50100C92844 /* CocoaAsyncSocket in Frameworks */ = {isa = PBXBuildFile; productRef = FB8D40E3279BE50100C92844 /* CocoaAsyncSocket */; };
+		FB8D40E6279C0AB900C92844 /* ByteBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8D40E5279C0AB900C92844 /* ByteBuffer.swift */; };
+		FB8D40E7279C0AB900C92844 /* ByteBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8D40E5279C0AB900C92844 /* ByteBuffer.swift */; };
+		FB8D40E9279C0FA200C92844 /* CocoaAsyncSocket in Frameworks */ = {isa = PBXBuildFile; productRef = FB8D40E8279C0FA200C92844 /* CocoaAsyncSocket */; };
 		FB97AB41262FC74D00573B3B /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB97AB40262FC74D00573B3B /* ProgressHUD.swift */; };
 		FB97AB44262FD4AF00573B3B /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB97AB43262FD4AF00573B3B /* Config.swift */; };
 		FBA88085263C05510019A4FF /* Wormhole in Frameworks */ = {isa = PBXBuildFile; productRef = FBA88084263C05510019A4FF /* Wormhole */; };
@@ -105,6 +109,7 @@
 		FB16828626311B5A00641C9A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FB48133C263155AB0010E58E /* janus-videoroom-example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "janus-videoroom-example.entitlements"; sourceTree = "<group>"; };
 		FB48133D263159D70010E58E /* Broadcast.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Broadcast.entitlements; sourceTree = "<group>"; };
+		FB8D40E5279C0AB900C92844 /* ByteBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteBuffer.swift; sourceTree = "<group>"; };
 		FB97AB40262FC74D00573B3B /* ProgressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressHUD.swift; sourceTree = "<group>"; };
 		FB97AB43262FD4AF00573B3B /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		FBAC1FAE2637FB97007C2AFD /* ScreenSampleCapturer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSampleCapturer.swift; sourceTree = "<group>"; };
@@ -117,6 +122,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB8D40E4279BE50100C92844 /* CocoaAsyncSocket in Frameworks */,
 				A053DBFC262EF49B00672386 /* Starscream in Frameworks */,
 				FB6C0EE0266A18D700642AFE /* WebRTC in Frameworks */,
 				FBA88085263C05510019A4FF /* Wormhole in Frameworks */,
@@ -128,6 +134,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB8D40E9279C0FA200C92844 /* CocoaAsyncSocket in Frameworks */,
 				FB16827B26311B5A00641C9A /* ReplayKit.framework in Frameworks */,
 				FBA88087263C055B0019A4FF /* Wormhole in Frameworks */,
 				FB4813552631644E0010E58E /* Starscream in Frameworks */,
@@ -191,6 +198,7 @@
 		A053DC17262EF93D00672386 /* Venders */ = {
 			isa = PBXGroup;
 			children = (
+				FB8D40E5279C0AB900C92844 /* ByteBuffer.swift */,
 				FB97AB40262FC74D00573B3B /* ProgressHUD.swift */,
 				A053DC18262EF95B00672386 /* Codextended.swift */,
 				A053DC1D262EFA4100672386 /* RTCStates.swift */,
@@ -251,6 +259,7 @@
 				A053DBFF262EF4F400672386 /* Alertift */,
 				FBA88084263C05510019A4FF /* Wormhole */,
 				FB6C0EDF266A18D700642AFE /* WebRTC */,
+				FB8D40E3279BE50100C92844 /* CocoaAsyncSocket */,
 			);
 			productName = "janus-videoroom-example";
 			productReference = A053DBE2262EF24500672386 /* janus-videoroom-example.app */;
@@ -272,6 +281,7 @@
 			packageProductDependencies = (
 				FB4813542631644E0010E58E /* Starscream */,
 				FBA88086263C055B0019A4FF /* Wormhole */,
+				FB8D40E8279C0FA200C92844 /* CocoaAsyncSocket */,
 			);
 			productName = Broadcast;
 			productReference = FB16827826311B5A00641C9A /* Broadcast.appex */;
@@ -310,6 +320,7 @@
 				A053DBFE262EF4F400672386 /* XCRemoteSwiftPackageReference "Alertift" */,
 				FBA88083263C05510019A4FF /* XCRemoteSwiftPackageReference "Wormhole" */,
 				FB6C0EDE266A18D700642AFE /* XCRemoteSwiftPackageReference "WebRTC" */,
+				FB8D40E2279BE50100C92844 /* XCRemoteSwiftPackageReference "CocoaAsyncSocket" */,
 			);
 			productRefGroup = A053DBE3262EF24500672386 /* Products */;
 			projectDirPath = "";
@@ -358,6 +369,7 @@
 				A053DC0F262EF6F000672386 /* JanusRequests.swift in Sources */,
 				FBEAC109262FB7B1008CDC23 /* VideoRoomCollectionViewCell.swift in Sources */,
 				A053DC0C262EF6D500672386 /* SignalingClient.swift in Sources */,
+				FB8D40E6279C0AB900C92844 /* ByteBuffer.swift in Sources */,
 				A053DC08262EF68A00672386 /* WebRTCClient.swift in Sources */,
 				FBAC1FAF2637FB97007C2AFD /* ScreenSampleCapturer.swift in Sources */,
 				FB97AB44262FD4AF00573B3B /* Config.swift in Sources */,
@@ -370,6 +382,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB481333263153BC0010E58E /* JanusConnection.swift in Sources */,
+				FB8D40E7279C0AB900C92844 /* ByteBuffer.swift in Sources */,
 				FB16827E26311B5A00641C9A /* SampleHandler.swift in Sources */,
 				FBAC1FB02637FBB3007C2AFD /* ScreenSampleCapturer.swift in Sources */,
 				FB48132F263153AF0010E58E /* Codextended.swift in Sources */,
@@ -545,7 +558,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.videoroom;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.1.videoroom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -570,7 +583,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.videoroom;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.1.videoroom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
@@ -599,7 +612,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "-DTARGET_IS_EXTENSION";
-				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.videoroom.Broadcast;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.1.videoroom.Broadcast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG TARGET_IS_EXTENSION";
@@ -627,7 +640,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "-DTARGET_IS_EXTENSION";
-				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.videoroom.Broadcast;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.1.videoroom.Broadcast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = TARGET_IS_EXTENSION;
@@ -694,6 +707,14 @@
 				minimumVersion = 91.0.1;
 			};
 		};
+		FB8D40E2279BE50100C92844 /* XCRemoteSwiftPackageReference "CocoaAsyncSocket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/robbiehanson/CocoaAsyncSocket";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
 		FBA88083263C05510019A4FF /* XCRemoteSwiftPackageReference "Wormhole" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Meonardo/Wormhole.git";
@@ -724,6 +745,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FB6C0EDE266A18D700642AFE /* XCRemoteSwiftPackageReference "WebRTC" */;
 			productName = WebRTC;
+		};
+		FB8D40E3279BE50100C92844 /* CocoaAsyncSocket */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB8D40E2279BE50100C92844 /* XCRemoteSwiftPackageReference "CocoaAsyncSocket" */;
+			productName = CocoaAsyncSocket;
+		};
+		FB8D40E8279C0FA200C92844 /* CocoaAsyncSocket */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB8D40E2279BE50100C92844 /* XCRemoteSwiftPackageReference "CocoaAsyncSocket" */;
+			productName = CocoaAsyncSocket;
 		};
 		FBA88084263C05510019A4FF /* Wormhole */ = {
 			isa = XCSwiftPackageProductDependency;
