@@ -30,4 +30,6 @@ struct Config {
     
     
     static let wormholeContainer = "kWormholeContainer"
+    
+    static let SOCKET_PORT: UInt16 = 9991
 }

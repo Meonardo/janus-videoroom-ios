@@ -41,6 +41,8 @@
 		FB8D40E6279C0AB900C92844 /* ByteBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8D40E5279C0AB900C92844 /* ByteBuffer.swift */; };
 		FB8D40E7279C0AB900C92844 /* ByteBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8D40E5279C0AB900C92844 /* ByteBuffer.swift */; };
 		FB8D40E9279C0FA200C92844 /* CocoaAsyncSocket in Frameworks */ = {isa = PBXBuildFile; productRef = FB8D40E8279C0FA200C92844 /* CocoaAsyncSocket */; };
+		FB8D40EB279CEDC900C92844 /* BufferDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8D40EA279CEDC900C92844 /* BufferDataHelper.swift */; };
+		FB8D40EC279CEDC900C92844 /* BufferDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8D40EA279CEDC900C92844 /* BufferDataHelper.swift */; };
 		FB97AB41262FC74D00573B3B /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB97AB40262FC74D00573B3B /* ProgressHUD.swift */; };
 		FB97AB44262FD4AF00573B3B /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB97AB43262FD4AF00573B3B /* Config.swift */; };
 		FBA88085263C05510019A4FF /* Wormhole in Frameworks */ = {isa = PBXBuildFile; productRef = FBA88084263C05510019A4FF /* Wormhole */; };
@@ -110,6 +112,7 @@
 		FB48133C263155AB0010E58E /* janus-videoroom-example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "janus-videoroom-example.entitlements"; sourceTree = "<group>"; };
 		FB48133D263159D70010E58E /* Broadcast.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Broadcast.entitlements; sourceTree = "<group>"; };
 		FB8D40E5279C0AB900C92844 /* ByteBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ByteBuffer.swift; sourceTree = "<group>"; };
+		FB8D40EA279CEDC900C92844 /* BufferDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferDataHelper.swift; sourceTree = "<group>"; };
 		FB97AB40262FC74D00573B3B /* ProgressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressHUD.swift; sourceTree = "<group>"; };
 		FB97AB43262FD4AF00573B3B /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		FBAC1FAE2637FB97007C2AFD /* ScreenSampleCapturer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSampleCapturer.swift; sourceTree = "<group>"; };
@@ -199,6 +202,7 @@
 			isa = PBXGroup;
 			children = (
 				FB8D40E5279C0AB900C92844 /* ByteBuffer.swift */,
+				FB8D40EA279CEDC900C92844 /* BufferDataHelper.swift */,
 				FB97AB40262FC74D00573B3B /* ProgressHUD.swift */,
 				A053DC18262EF95B00672386 /* Codextended.swift */,
 				A053DC1D262EFA4100672386 /* RTCStates.swift */,
@@ -362,6 +366,7 @@
 				A053DC20262EFA4100672386 /* RTCStates.swift in Sources */,
 				A053DC15262EF92000672386 /* JanusRoomManager.swift in Sources */,
 				A053DBE6262EF24500672386 /* AppDelegate.swift in Sources */,
+				FB8D40EB279CEDC900C92844 /* BufferDataHelper.swift in Sources */,
 				A053DC19262EF95B00672386 /* Codextended.swift in Sources */,
 				FB045D44263A5186008A8EB6 /* WormholeMessages.swift in Sources */,
 				A053DBE8262EF24500672386 /* SceneDelegate.swift in Sources */,
@@ -381,6 +386,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB8D40EC279CEDC900C92844 /* BufferDataHelper.swift in Sources */,
 				FB481333263153BC0010E58E /* JanusConnection.swift in Sources */,
 				FB8D40E7279C0AB900C92844 /* ByteBuffer.swift in Sources */,
 				FB16827E26311B5A00641C9A /* SampleHandler.swift in Sources */,

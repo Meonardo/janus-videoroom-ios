@@ -8,6 +8,7 @@
 import UIKit
 import ReplayKit
 import Alertift
+import CocoaAsyncSocket
 
 class ViewController: UIViewController {
 
@@ -19,7 +20,12 @@ class ViewController: UIViewController {
     
     private let userDefault = UserDefaults(suiteName: Config.sharedGroupName)
     
-    private let socket = InSocket()
+    private var socket: GCDAsyncSocket?
+    private var clients: [GCDAsyncSocket] = []
+    
+    private var clientSocket: GCDAsyncSocket? {
+        clients.first
+    }
     
     private var roomManager: JanusRoomManager {
         JanusRoomManager.shared
@@ -55,6 +61,8 @@ class ViewController: UIViewController {
 extension ViewController {
     
     private func prepare() {
+        addTCPSocketListener()
+        
         addNotificationObserver()
         
         textField.text = userDefault?.string(forKey: Config.lastJoinedRoomKey)
@@ -73,8 +81,31 @@ extension ViewController {
         }
     }
     
-    private func addUDPSocketListener() {
+//    private func addUDPSocketListener() {
+//        let queue = DispatchQueue(label: "com.gcd.socket.recv.q")
+//        socket = GCDAsyncUdpSocket(delegate: self, delegateQueue: queue)
+//        do {
+//            try socket?.bind(toPort: Config.SOCKET_PORT)
+//        } catch {
+//            print(error)
+//        }
+//
+//        do {
+//            try socket?.beginReceiving()
+//        } catch {
+//            print("beginReceiving not proceed")
+//        }
+//    }
+    
+    private func addTCPSocketListener() {
+        let queue = DispatchQueue(label: "com.gcd.socket.recv.q")
+        socket = GCDAsyncSocket(delegate: self, delegateQueue: queue, socketQueue: queue)
         
+        do {
+            try socket?.accept(onPort: Config.SOCKET_PORT)
+        } catch {
+            print("Accept socket failed: \(error.localizedDescription)")
+        }
     }
     
     private func addNotificationObserver() {
@@ -167,5 +198,34 @@ extension ViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         joinAction(joinButton)
         return true
+    }
+}
+
+extension ViewController: GCDAsyncUdpSocketDelegate {
+    
+    func udpSocket(_ sock: GCDAsyncUdpSocket, didReceive data: Data, fromAddress address: Data, withFilterContext filterContext: Any?) {
+        if data.count == 20 {
+            /// header
+            guard let header = PixelDataST.parse(from: data) else { return }
+            let isStart = header.isStart
+            print("\(isStart ? "[Start]": "[End]")\t Seq: \(header.seq), Length: \(header.bodyLength)")
+        } else {
+            print("Body data...")
+        }
+    }
+}
+
+extension ViewController: GCDAsyncSocketDelegate {
+    
+    func socket(_ sock: GCDAsyncSocket, didAcceptNewSocket newSocket: GCDAsyncSocket) {
+        print("New client socket accepted!")
+        clients.append(sock)
+        
+        sock.readData(withTimeout: -1, tag: 0)
+    }
+    
+    func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {
+        print("In coming data from client...")
+        sock.readData(withTimeout: -1, tag: 0)
     }
 }

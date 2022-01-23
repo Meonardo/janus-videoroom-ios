@@ -1,10 +1,3 @@
-//
-//  ByteBuffer.swift
-//  CloudyClass
-//
-//  Created by Amdox on 2021/3/24.
-//
-
 import Foundation
 
 /// 类似于Java的ByteBuffer, 方便转换Data
@@ -64,6 +57,10 @@ extension ByteBuffer {
     
     func append(_ data: Data) {
         array.append(contentsOf: data.bytes)
+    }
+    
+    func append(_ bytes: [UInt8]) {
+        array.append(contentsOf: bytes)
     }
     
     var bytes: [UInt8] {
