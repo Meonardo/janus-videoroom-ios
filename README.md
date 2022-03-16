@@ -6,7 +6,8 @@ An iOS example project for janus videoroom-plugin, written in Swift.
 - 1 to many video conference;
 - camera sharing;
 - screen sharing(currently video only(h.264), raw buffer without any modifications);
-- interact with GPUImage(under developing...).
+- ~~interact with GPUImage(under developing...)~~
+- `AVSampleBufferDisplayLayer` based renderer support(can use PiP mode in iOS 15).
 
 ## Screenshots
 
@@ -20,13 +21,10 @@ An iOS example project for janus videoroom-plugin, written in Swift.
 ## Steps
 
 - Connect signaling server first(specific in `Config.signalingServerURL`), 
-for example: `wss://janus.conf.meetecho.com/ws` or build your own janus sever.
-- Input room number(such as: 1234), `1234` is higly recommended.
+for example: `wss://janus.conf.meetecho.com/ws` or 
+build your own janus sever(try [this repo](https://github.com/Meonardo/janus-docker) to build janus docker image on your machine).
+- Input room number(such as: 1234).
 - Hit `Join Room`, will joined the video room if nothing goes wrong.
-
-## Sequence Diagram
-
-- Uploading...
 
 ## External Libraries & their licenses
 - [WebRTC](https://github.com/Meonardo/WebRTC.git).
