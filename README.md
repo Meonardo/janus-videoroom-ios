@@ -7,12 +7,17 @@ An iOS example project for janus videoroom-plugin, written in Swift.
 - camera sharing;
 - screen sharing(currently video only(h.264), raw buffer without any modifications);
 - ~~interact with GPUImage(under developing...)~~
-- `AVSampleBufferDisplayLayer` based renderer support(can use PiP mode in iOS 15).
+- `AVSampleBufferDisplayLayer` based renderer support(can use PiP mode in iOS 15, currently only support NV12 pixel format).
+
+## TODO
+
+- Rewrite UI in SwiftUI;
+- Replace `Starscream` with `URLSessionWebSocketTask` and use Concurrency APIs.
 
 ## Screenshots
 
 ![Video Room](resource/screenshot%402x.png)
-<img src="resource/screenshot_pip.PNG" width="340">
+<img src="resource/screenshot_pip.PNG" width="300">
 
 ## Notice
 
