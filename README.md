@@ -12,6 +12,7 @@ An iOS example project for janus videoroom-plugin, written in Swift.
 ## Screenshots
 
 ![Video Room](resource/screenshot%402x.png)
+<img src="resource/screenshot_pip.PNG" width="340">
 
 ## Notice
 
