@@ -245,9 +245,8 @@ extension WebRTCClient {
 	
     @available(iOSApplicationExtension, unavailable)
 	func attach(renderer: RTCVideoRenderer, isLocal: Bool) {
-        /// **Notice**: Use `RTCMTLVideoView` as renderer only.
-        guard let view = renderer as? RTCMTLVideoView else { return }
         if isLocal {
+            guard let view = renderer as? RTCMTLVideoView else { return }
             updateVideoOrientationIfNecessary()
             adjustRotationIfNecessary(for: view)
             startCaptureLocalVideo(renderer: renderer)

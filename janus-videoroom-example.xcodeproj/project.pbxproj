@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A052F59127E172690000C772 /* AVSampleBufferView.m in Sources */ = {isa = PBXBuildFile; fileRef = A052F59027E172690000C772 /* AVSampleBufferView.m */; };
 		A053DBE6262EF24500672386 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DBE5262EF24500672386 /* AppDelegate.swift */; };
 		A053DBE8262EF24500672386 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DBE7262EF24500672386 /* SceneDelegate.swift */; };
 		A053DBEA262EF24500672386 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A053DBE9262EF24500672386 /* ViewController.swift */; };
@@ -82,6 +83,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A052F58E27E172690000C772 /* janus-videoroom-example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "janus-videoroom-example-Bridging-Header.h"; sourceTree = "<group>"; };
+		A052F58F27E172690000C772 /* AVSampleBufferView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AVSampleBufferView.h; sourceTree = "<group>"; };
+		A052F59027E172690000C772 /* AVSampleBufferView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AVSampleBufferView.m; sourceTree = "<group>"; };
 		A053DBE2262EF24500672386 /* janus-videoroom-example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "janus-videoroom-example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A053DBE5262EF24500672386 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A053DBE7262EF24500672386 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -137,6 +141,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A052F58D27E1722F0000C772 /* Objc */ = {
+			isa = PBXGroup;
+			children = (
+				A052F58F27E172690000C772 /* AVSampleBufferView.h */,
+				A052F59027E172690000C772 /* AVSampleBufferView.m */,
+				A052F58E27E172690000C772 /* janus-videoroom-example-Bridging-Header.h */,
+			);
+			path = Objc;
+			sourceTree = "<group>";
+		};
 		A053DBD9262EF24500672386 = {
 			isa = PBXGroup;
 			children = (
@@ -159,6 +173,7 @@
 		A053DBE4262EF24500672386 /* janus-videoroom-example */ = {
 			isa = PBXGroup;
 			children = (
+				A052F58D27E1722F0000C772 /* Objc */,
 				A053DC06262EF61900672386 /* Source */,
 				FBEAC103262FB0A6008CDC23 /* Views */,
 				A053DBE5262EF24500672386 /* AppDelegate.swift */,
@@ -288,7 +303,7 @@
 				TargetAttributes = {
 					A053DBE1262EF24500672386 = {
 						CreatedOnToolsVersion = 12.2;
-						LastSwiftMigration = 1240;
+						LastSwiftMigration = 1320;
 					};
 					FB16827726311B5A00641C9A = {
 						CreatedOnToolsVersion = 12.4;
@@ -355,6 +370,7 @@
 				FB045D44263A5186008A8EB6 /* WormholeMessages.swift in Sources */,
 				A053DBE8262EF24500672386 /* SceneDelegate.swift in Sources */,
 				FB97AB41262FC74D00573B3B /* ProgressHUD.swift in Sources */,
+				A052F59127E172690000C772 /* AVSampleBufferView.m in Sources */,
 				A053DC0F262EF6F000672386 /* JanusRequests.swift in Sources */,
 				FBEAC109262FB7B1008CDC23 /* VideoRoomCollectionViewCell.swift in Sources */,
 				A053DC0C262EF6D500672386 /* SignalingClient.swift in Sources */,
@@ -537,7 +553,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "janus-videoroom-example/janus-videoroom-example.entitlements";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = W77429FCJY;
 				INFOPLIST_FILE = "janus-videoroom-example/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -545,9 +562,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.videoroom;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janusvideoroom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				PROVISIONING_PROFILE_SPECIFIER = JanusVideoRoom;
+				SWIFT_OBJC_BRIDGING_HEADER = "janus-videoroom-example/Objc/janus-videoroom-example-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -562,7 +580,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "janus-videoroom-example/janus-videoroom-example.entitlements";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = W77429FCJY;
 				INFOPLIST_FILE = "janus-videoroom-example/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -570,9 +589,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.videoroom;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janusvideoroom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				PROVISIONING_PROFILE_SPECIFIER = JanusVideoRoom;
+				SWIFT_OBJC_BRIDGING_HEADER = "janus-videoroom-example/Objc/janus-videoroom-example-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -584,7 +604,8 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Broadcast/Broadcast.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = W77429FCJY;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -599,8 +620,9 @@
 					"@executable_path/../../Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "-DTARGET_IS_EXTENSION";
-				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.videoroom.Broadcast;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janusvideoroom.upload;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = JanusVideoRoomUpload;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG TARGET_IS_EXTENSION";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -616,7 +638,8 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Broadcast/Broadcast.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = W77429FCJY;
 				GCC_PREPROCESSOR_DEFINITIONS = "TARGET_IS_EXTENSION=1";
 				INFOPLIST_FILE = Broadcast/Info.plist;
@@ -627,8 +650,9 @@
 					"@executable_path/../../Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "-DTARGET_IS_EXTENSION";
-				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janus.videoroom.Broadcast;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meonardo.janusvideoroom.upload;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = JanusVideoRoomUpload;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = TARGET_IS_EXTENSION;
 				SWIFT_OBJC_BRIDGING_HEADER = "";

@@ -9,6 +9,7 @@ import UIKit
 import WebRTC
 import Alertift
 import ReplayKit
+import AVKit
 
 extension VideoRoomViewController {
     /// Show Video Page
@@ -35,7 +36,14 @@ class VideoRoomViewController: UIViewController {
 	
 	private var broadcastPicker: RPSystemBroadcastPickerView?
 	
-    private weak var renderer: RTCMTLVideoView?
+    // Currently only show the selected publisher in PiP mode.
+    private weak var renderer: AVSampleBufferView?
+    // PiP stuff
+    var isPIPSupported: Bool {
+        AVPictureInPictureController.isPictureInPictureSupported()
+    }
+    private var pipController: AVPictureInPictureController?
+    private var pipPossibleObservation: NSKeyValueObservation?
     
     private var roomManager: JanusRoomManager {
         JanusRoomManager.shared
@@ -116,7 +124,7 @@ extension VideoRoomViewController {
     }
 
     private func configureRenderer() {
-        let renderer = RTCMTLVideoView(frame: view.bounds)
+        let renderer = AVSampleBufferView(frame: view.bounds)
         view.insertSubview(renderer, at: 0)
         renderer.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
@@ -145,6 +153,11 @@ extension VideoRoomViewController {
 		Alertift.alert(title: "Leave the Room?", message: "The room will be destroyed").action(.default("Leave")) {
 			ProgressHUD.show()
 			self.roomManager.leaveCurrentRoom()
+            
+            self.renderer?.destroy()
+            if #available(iOS 15.0, *) {
+                self.exitPIPController()
+            }
 		}.action(.cancel("Not now")).show(on: self)
     }
     
@@ -273,6 +286,10 @@ extension VideoRoomViewController {
         
         if currentConnection == nil {
             configureDataSource()
+            
+            if #available(iOS 15.0, *) {
+                prepareToPIPController()
+            }
         } else {
             dataSource.append(connection)
         }
@@ -305,6 +322,13 @@ extension VideoRoomViewController: UICollectionViewDelegate, UICollectionViewDat
         guard let currentConnection = currentConnection, let renderer = renderer else { return }
         
         let selectedConnection = dataSource[indexPath.item]
+        
+        // Camera rendering is NOT support in PiP mode
+        // (I have not request the `Accessing the Camera While Multitasking` permission from Apple successfully)
+        if selectedConnection.isLocal {
+            return
+        }
+        
         dataSource[indexPath.item] = currentConnection
         
         /// Detach Renderer From its Source
@@ -312,12 +336,92 @@ extension VideoRoomViewController: UICollectionViewDelegate, UICollectionViewDat
         /// Attach Renderer to New Source
         selectedConnection.rtcClient?.attach(renderer: renderer, isLocal: selectedConnection.isLocal)
         
-        renderer.videoContentMode = .scaleAspectFill
-        
         titleLabel.text = selectedConnection.publisher.display
 
         self.currentConnection = selectedConnection
         
         collectionView.reloadItems(at: [indexPath])
+    }
+}
+
+@available(iOS 15.0, *)
+extension VideoRoomViewController {
+    
+    private func prepareToPIPController() {
+        guard isPIPSupported else {
+            return
+        }
+        
+        guard let sampleBufferDisplayLayer = renderer?.layer as? AVSampleBufferDisplayLayer else {
+            return
+        }
+        
+        let contentSource = AVPictureInPictureController.ContentSource(sampleBufferDisplayLayer: sampleBufferDisplayLayer, playbackDelegate: self)
+        pipController = AVPictureInPictureController(contentSource: contentSource)
+        pipController?.delegate = self
+        pipPossibleObservation = pipController?.observe(
+            \AVPictureInPictureController.isPictureInPicturePossible,
+             options: [.initial, .new],
+             changeHandler: { [weak self] _, changed in
+                 DispatchQueue.main.async {
+                     if changed.newValue == true {
+                         self?.start()
+                     }
+                 }
+             })
+    }
+    
+    private func exitPIPController() {
+        pipPossibleObservation?.invalidate()
+        pipController = nil
+    }
+    
+    func start() {
+        if pipController == nil {
+            prepareToPIPController()
+        }
+        
+        guard let pipController = pipController,
+                pipController.isPictureInPicturePossible,
+                pipController.isPictureInPictureActive == false else {
+            return
+        }
+        
+        pipController.startPictureInPicture()
+    }
+    
+    func stop() {
+        pipController?.stopPictureInPicture()
+    }
+}
+
+@available(iOS 15.0, *)
+extension VideoRoomViewController: AVPictureInPictureControllerDelegate {
+    
+    func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        stop()
+    }
+    
+    func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+//        exitPIPController()
+    }
+}
+
+@available(iOS 15.0, *)
+extension VideoRoomViewController: AVPictureInPictureSampleBufferPlaybackDelegate {
+    
+    func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, setPlaying playing: Bool) {}
+    func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, didTransitionToRenderSize newRenderSize: CMVideoDimensions) {}
+    
+    func pictureInPictureControllerTimeRangeForPlayback(_ pictureInPictureController: AVPictureInPictureController) -> CMTimeRange {
+        CMTimeRange(start: .negativeInfinity, duration: .positiveInfinity)
+    }
+    
+    func pictureInPictureControllerIsPlaybackPaused(_ pictureInPictureController: AVPictureInPictureController) -> Bool {
+        false
+    }
+    
+    func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, skipByInterval skipInterval: CMTime, completion completionHandler: @escaping () -> Void) {
+        completionHandler()
     }
 }
