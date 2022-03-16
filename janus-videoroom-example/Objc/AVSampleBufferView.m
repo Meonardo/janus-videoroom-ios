@@ -47,17 +47,20 @@
     if (CGSizeEqualToSize(self.bounds.size, CGSizeZero))
         return;
     
-    // The renderer will draw the frame to the framebuffer corresponding to the
-    // one used by `view`.
     RTC_OBJC_TYPE(RTCVideoFrame) *frame = self.videoFrame;
     if ([frame.buffer isKindOfClass:[RTC_OBJC_TYPE(RTCCVPixelBuffer) class]]) {
+        // NV12 format
         RTC_OBJC_TYPE(RTCCVPixelBuffer) *buffer = (RTC_OBJC_TYPE(RTCCVPixelBuffer) *)frame.buffer;
         CVPixelBufferRef pixelBuffer = buffer.pixelBuffer;
         [self displayPixelBuffer:pixelBuffer];
         
         _lastDrawnFrameTimeStampNs = self.videoFrame.timeStampNs;
     } else {
-        // not handled!
+        // RTCI420Buffer
+        // TODO: convert the buffer to CVPixelBufferRef
+        // https://webrtc.googlesource.com/src/+/refs/heads/main/sdk/objc/unittests/frame_buffer_helpers.mm#69
+        // or
+        // https://webrtc.googlesource.com/src/+/refs/heads/main/sdk/objc/components/video_codec/RTCVideoEncoderH264.mm#95
     }
 }
 
